@@ -1,3 +1,5 @@
+from tabulate import tabulate
+
 import discord
 from discord.ext.commands import Bot
 import main
@@ -50,6 +52,24 @@ async def whohas(ctx):
         else:
             result = main.get_who_has(arguments[1])
     await client.say(", ".join(result))
+
+
+@client.command(pass_context=True)
+async def compute_tickets(ctx):
+    arguments = ctx.message.content.split(' ')
+    if len(arguments) >= 2:
+        if len(arguments[1]) == 8 and represents_int(arguments[1]):
+            result, date = main.compute_tickets(str(ctx.message.author), arguments[1])
+        else:
+            await client.say("Wrong date format. Usage: ?compute_tickets (optional: <YYYYMMDD>")
+            return
+    else:
+        result, date = main.compute_tickets(str(ctx.message.author))
+    if result.empty:
+        await client.say("Error processing images.")
+    else:
+        await client.say("{} Tickets:".format(date))
+        await client.say(tabulate(result, headers='keys', tablefmt='psql'))
 
 
 def represents_int(s):

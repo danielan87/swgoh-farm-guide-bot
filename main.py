@@ -4,6 +4,10 @@ import os
 import urllib.request, json
 from string import ascii_uppercase
 import xlwt
+import requests
+import datetime
+import swgoh_leader_tool.swgoh_leader_tool as tool
+
 
 toons = {'CORUSCANTUNDERWORLDPOLICE': 'CUP',
          'KITFISTO': 'KitFisto',
@@ -143,6 +147,43 @@ def get_toon_list():
 
 def get_ship_list():
     return list(ships.values())
+
+
+def download_image_into_correct_folder(author, attachment):
+    url = attachment['url']
+    r = requests.get(url)
+    now = datetime.datetime.now()
+    newpath = os.path.join('images', author)
+    if tool.check_if_ticket_image(url, mode='remote'):
+        newpath = os.path.join(newpath, 'tickets')
+    newpath = os.path.join(newpath, now.strftime('%Y%m%d'))
+    os.makedirs(newpath, exist_ok=True)
+    new_file_name = "{}_{}".format(now.strftime('%Y%m%d%H%M%S'), attachment['filename'])
+    with open(os.path.join(newpath, new_file_name), 'xb') as outfile:
+        outfile.write(r.content)
+
+
+def compute_tickets(author, date=""):
+    ticket_folder = os.path.join('images', author, 'tickets')
+    dates = os.listdir(ticket_folder)
+    if not date and dates:
+        date = sorted(dates)[-1]
+    else:
+        if date not in dates:
+            return "No ticket data with date"
+    image_folder = os.path.join(ticket_folder, date)
+    images = os.listdir(image_folder)
+    result = pd.DataFrame()
+    for i in images:
+        temp = tool.get_tickets_from_image(os.path.join(image_folder, i))
+        if temp.empty:
+            continue
+        result = result.reset_index().merge(temp.reset_index(), how='outer', left_on='index', right_on='index')
+        if 'Tickets_x' in result.columns.tolist():
+            result.loc[:, 'Tickets'] = result['Tickets_x'].fillna(result['Tickets_y'])
+        result = result[['index', 'Tickets']].set_index('index')
+    return result, date
+
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
