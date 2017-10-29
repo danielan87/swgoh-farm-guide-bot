@@ -3,6 +3,7 @@ from tabulate import tabulate
 import discord
 from discord.ext.commands import Bot
 import main
+import math
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -69,7 +70,15 @@ async def compute_tickets(ctx):
         await client.say("Error processing images.")
     else:
         await client.say("{} Tickets:".format(date))
-        await client.say(tabulate(result, headers='keys', tablefmt='psql'))
+        df_str = tabulate(result, headers='keys', tablefmt='psql')
+        # we want to split it in n messages of less than 2000 characters
+        n = math.ceil(len(df_str)/2000)
+        l = int(len(result) / n)
+        for i in range(n):
+            max = i*l+l
+            if max > len(result):
+                max = len(result)
+            await client.say(tabulate(result[i*l:max], headers='keys', tablefmt='psql'))
 
 
 def represents_int(s):
