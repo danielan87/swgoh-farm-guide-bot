@@ -4,6 +4,7 @@ import discord
 from discord.ext.commands import Bot
 import main
 import math
+import re
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -40,7 +41,9 @@ async def cmdlist(ctx):
     :return:
     """
     print("{} asked for the command list!".format(str(ctx.message.author)))
-    await client.say("?toonlist, ?shiplist, ?whohas")
+    await client.say(
+        "?ping, ?cmdlist, ?toonlist, ?shiplist, ?whohas (registered guild leaders: ?compute_tickets, ?ticket_dates, "
+        "?register)")
 
 
 @client.command(pass_context=True)
@@ -100,6 +103,11 @@ async def compute_tickets(ctx):
     :param ctx:
     :return:
     """
+    if not main.is_registered_guild_leader(str(ctx.message.author)):
+        print("{} tried to use compute_tickets while not being registered as guild leader".format(
+            str(ctx.message.author)))
+        await client.say("Command reserved to registered guild leaders.")
+        return
     arguments = ctx.message.content.split(' ')
     if len(arguments) >= 2:
         if len(arguments[1]) == 8 and represents_int(arguments[1]):
@@ -119,13 +127,53 @@ async def compute_tickets(ctx):
         await client.say("{} Tickets:".format(date))
         df_str = tabulate(result, headers='keys', tablefmt='psql')
         # we want to split it in n messages of less than 2000 characters
-        n = math.ceil(len(df_str)/2000)
+        n = math.ceil(len(df_str) / 2000)
         l = int(len(result) / n)
         for i in range(n):
-            max = i*l+l
+            max = i * l + l
             if max > len(result):
                 max = len(result)
-            await client.say(tabulate(result[i*l:max], headers='keys', tablefmt='psql'))
+            await client.say(tabulate(result[i * l:max], headers='keys', tablefmt='psql'))
+
+
+@client.command(pass_context=True)
+async def ticket_dates(ctx):
+    """
+        List of available dates for tickets for an author.
+        :param ctx:
+        :return:
+        """
+    if not main.is_registered_guild_leader(str(ctx.message.author)):
+        print("{} tried to use compute_tickets while not being registered as guild leader".format(
+            str(ctx.message.author)))
+        await client.say("Command reserved to registered guild leaders.")
+        return
+    result = main.get_available_ticket_dates(str(ctx.message.author))
+    print("{} asked for the list of ticket dates (result: {})".format(str(ctx.message.author), ", ".join(result)))
+    await client.say(", ".join(result))
+
+
+@client.command(pass_context=True)
+async def register(ctx):
+    """
+        List of available dates for tickets for an author.
+        :param ctx:
+        :return:
+        """
+    if not main.is_registered_guild_leader(str(ctx.message.author)):
+        print("{} tried to use compute_tickets while not being registered as guild leader".format(
+            str(ctx.message.author)))
+        await client.say("Command reserved to registered guild leaders.")
+        return
+    arguments = ctx.message.content.split(' ')
+    if len(arguments) >= 2:
+        to_register = arguments[1]
+        pattern = re.compile('.+#\d+')
+        if pattern.match(to_register):
+            main.register_guild_leader(to_register)
+            await client.say("{} registered!".format(to_register))
+        else:
+            await client.say("The given ID is not a discord ID.")
 
 
 def represents_int(s):

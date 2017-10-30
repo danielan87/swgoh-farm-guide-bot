@@ -8,7 +8,6 @@ import requests
 import datetime
 import swgoh_leader_tool.swgoh_leader_tool as tool
 
-
 toons = {'CORUSCANTUNDERWORLDPOLICE': 'CUP',
          'KITFISTO': 'KitFisto',
          'LOBOT': 'Lobot',
@@ -187,6 +186,17 @@ def compute_tickets(author, date=""):
     print("Tickets computed successfully")
     return result, date
 
+
+def get_available_ticket_dates(author):
+    return tool.get_available_ticket_dates(author)
+
+
+def register_guild_leader(name):
+    return tool.register_guild_leader(name)
+
+
+def is_registered_guild_leader(author):
+    return tool.is_registered_guild_leader(author)
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
