@@ -16,6 +16,7 @@ async def on_ready():
 
 @client.async_event
 async def on_message(message):
+    print("{} sent an image.".format(str(message.author)))
     if message.attachments:
         for a in message.attachments:
             filename = a['filename']

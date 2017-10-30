@@ -164,27 +164,27 @@ def download_image_into_correct_folder(author, attachment):
 
 
 def compute_tickets(author, date=""):
-    image_contents = tool.get_ticket_content(author, date)
+    """
+    Computes the ticket data for a date
+    :param author:
+    :param date:
+    :return:
+    """
+    image_contents, date = tool.get_ticket_content(author, date)
     if not image_contents:
+        print("No data found for tickets (author: {}, date: {}".format(author, date))
         return "No ticket data"
-    # ticket_folder = os.path.join('images', author, 'tickets')
-    # dates = os.listdir(ticket_folder)
-    # if not date and dates:
-    #    date = sorted(dates)[-1]
-    #else:
-    #    if date not in dates:
-    #        return "No ticket data with date"
-    # image_folder = os.path.join(ticket_folder, date)
-    # images = os.listdir(image_folder)
     result = pd.DataFrame()
     for i in image_contents:
         temp = tool.get_tickets_from_image(i)
         if temp.empty:
+            print("WARNING: {} returned empty (skipped)".format(i))
             continue
         result = result.reset_index().merge(temp.reset_index(), how='outer', left_on='index', right_on='index')
         if 'Tickets_x' in result.columns.tolist():
             result.loc[:, 'Tickets'] = result['Tickets_x'].fillna(result['Tickets_y'])
         result = result[['index', 'Tickets']].set_index('index')
+    print("Tickets computed successfully")
     return result, date
 
 
