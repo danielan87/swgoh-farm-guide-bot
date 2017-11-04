@@ -1,10 +1,8 @@
-from tabulate import tabulate
-
 import discord
 from discord.ext.commands import Bot
 import main
-import math
 import re
+import time
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -42,7 +40,7 @@ async def cmdlist(ctx):
     """
     print("{} asked for the command list!".format(str(ctx.message.author)))
     await client.say(
-        "?ping, ?cmdlist, ?toonlist, ?shiplist, ?whohas (registered guild leaders: ?compute_tickets, ?ticket_dates, "
+        "?ping, ?cmdlist, ?toonlist, ?shiplist, ?whohas (registered guild leaders: ?tickets, ?ticket_dates, "
         "?register)")
 
 
@@ -96,7 +94,7 @@ async def whohas(ctx):
 
 
 @client.command(pass_context=True)
-async def compute_tickets(ctx):
+async def tickets(ctx):
     """
     Analyzes stored screenshots (the screenshots' data is actually extracted beforehand now) of a specific day and
     returns a table of players and their respective tickets
@@ -104,36 +102,31 @@ async def compute_tickets(ctx):
     :return:
     """
     if not main.is_registered_guild_leader(str(ctx.message.author)):
-        print("{} tried to use compute_tickets while not being registered as guild leader".format(
+        print("{} tried to use tickets while not being registered as guild leader".format(
             str(ctx.message.author)))
         await client.say("Command reserved to registered guild leaders.")
         return
     arguments = ctx.message.content.split(' ')
     if len(arguments) >= 2:
         if len(arguments[1]) == 8 and represents_int(arguments[1]):
-            print("{} is calling compute_tickets with date {}.".format(str(ctx.message.author), arguments[1]))
+            print("{} is calling tickets with date {}.".format(str(ctx.message.author), arguments[1]))
             result, date = main.compute_tickets(str(ctx.message.author), arguments[1])
         else:
-            await client.say("Wrong date format. Usage: ?compute_tickets (optional: <YYYYMMDD>")
+            await client.say("Wrong date format. Usage: ?tickets (optional: <YYYYMMDD>")
             return
     else:
-        print("{} is calling compute_tickets without date.".format(str(ctx.message.author)))
+        print("{} is calling tickets without date.".format(str(ctx.message.author)))
         result, date = main.compute_tickets(str(ctx.message.author))
     if result.empty:
-        print("{} is calling compute_tickets but no result..")
+        print("{} is calling tickets but no result..")
+
         await client.say("Error processing images.")
     else:
-        print("{} is calling compute_tickets but no result..")
+        print("{} is calling tickets but no result..")
+        splitted = main.get_split_tabulate_df(result)
         await client.say("{} Tickets:".format(date))
-        df_str = tabulate(result, headers='keys', tablefmt='psql')
-        # we want to split it in n messages of less than 2000 characters
-        n = math.ceil(len(df_str) / 2000)
-        l = int(len(result) / n)
-        for i in range(n):
-            max = i * l + l
-            if max > len(result):
-                max = len(result)
-            await client.say(tabulate(result[i * l:max], headers='keys', tablefmt='psql'))
+        for s in splitted:
+            await client.say(s)
 
 
 @client.command(pass_context=True)
@@ -144,13 +137,48 @@ async def ticket_dates(ctx):
         :return:
         """
     if not main.is_registered_guild_leader(str(ctx.message.author)):
-        print("{} tried to use compute_tickets while not being registered as guild leader".format(
+        print("{} tried to use ticket_dates while not being registered as guild leader".format(
             str(ctx.message.author)))
         await client.say("Command reserved to registered guild leaders.")
         return
     result = main.get_available_ticket_dates(str(ctx.message.author))
     print("{} asked for the list of ticket dates (result: {})".format(str(ctx.message.author), ", ".join(result)))
     await client.say(", ".join(result))
+
+
+@client.command(pass_context=True)
+async def diff(ctx):
+    """
+    Compare ticket counts between 2 dates
+    :param ctx:
+    :return:
+    """
+    if not main.is_registered_guild_leader(str(ctx.message.author)):
+        print("{} tried to use diff while not being registered as guild leader".format(
+            str(ctx.message.author)))
+        await client.say("Command reserved to registered guild leaders.")
+        return
+    arguments = ctx.message.content.split(' ')
+    if len(arguments) < 3:
+        await client.say("Error! diff usage: ?diff <DATE_1> <DATE_2> (date format: YYYYMMDD)")
+        return
+    date1 = arguments[1]
+    date2 = arguments[2]
+    try:
+        time.strptime(date1, "%Y%m%d")
+        time.strptime(date2, "%Y%m%d")
+    except ValueError:
+        await client.say("Error! date format should be YYYYMMDD")
+        return
+    date_list = main.get_available_ticket_dates(str(ctx.message.author))
+    if date1 not in date_list or date2 not in date_list:
+        await client.say("Error! One of the given dates does not have data stored.")
+        await client.say("Available dates: {}".format(", ".join(date_list)))
+        return
+    result = main.compute_diff(str(ctx.message.author), date1, date2)
+    splitted = main.get_split_tabulate_df(result)
+    for s in splitted:
+        await client.say(s)
 
 
 @client.command(pass_context=True)
@@ -161,7 +189,7 @@ async def register(ctx):
         :return:
         """
     if not main.is_registered_guild_leader(str(ctx.message.author)):
-        print("{} tried to use compute_tickets while not being registered as guild leader".format(
+        print("{} tried to use register while not being registered as guild leader".format(
             str(ctx.message.author)))
         await client.say("Command reserved to registered guild leaders.")
         return

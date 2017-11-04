@@ -1,12 +1,16 @@
 import pandas as pd
 from pandas import ExcelWriter
 import os
-import urllib.request, json
+import urllib.request
+import json
 from string import ascii_uppercase
 import xlwt
 import requests
 import datetime
 import swgoh_leader_tool.swgoh_leader_tool as tool
+from tabulate import tabulate
+import math
+
 
 toons = {'CORUSCANTUNDERWORLDPOLICE': 'CUP',
          'KITFISTO': 'KitFisto',
@@ -121,6 +125,20 @@ def clear_data():
     data = None
 
 
+def get_split_tabulate_df(df):
+    splitted_df = []
+    df_str = tabulate(df, headers='keys', tablefmt='psql')
+    # we want to split it in n messages of less than 2000 characters
+    n = math.ceil(len(df_str) / 2000)
+    l = int(len(df) / n)
+    for i in range(n):
+        max = i * l + l
+        if max > len(df):
+            max = len(df)
+        splitted_df.append(tabulate(df[i * l:max], headers='keys', tablefmt='psql'))
+    return splitted_df
+
+
 def get_who_has(unit, star=0):
     unit = unit.lower()
     toons_df = create_toons_df()
@@ -197,6 +215,19 @@ def register_guild_leader(name):
 
 def is_registered_guild_leader(author):
     return tool.is_registered_guild_leader(author)
+
+
+def compute_diff(author, date1, date2):
+    tickets1, _ = compute_tickets(author, date1)
+    tickets2, _ = compute_tickets(author, date2)
+    tickets1.rename(columns={'Tickets': date1}, inplace=True)
+    tickets2.rename(columns={'Tickets': date2}, inplace=True)
+    merged = tickets1.reset_index().merge(tickets2.reset_index(), how='outer', left_on="index", right_on="index")\
+        .set_index('index').fillna(0)
+    merged.loc[:, 'diff'] = merged[date1].astype(int) - merged[date2].astype(int)
+    merged['diff'] = merged['diff'].abs()
+    return merged
+
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
