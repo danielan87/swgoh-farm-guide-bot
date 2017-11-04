@@ -139,6 +139,10 @@ def get_split_tabulate_df(df):
     return splitted_df
 
 
+def get_split_csv(df):
+    return df.to_csv(sep=';')
+
+
 def get_who_has(unit, star=0):
     unit = unit.lower()
     toons_df = create_toons_df()

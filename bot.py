@@ -3,6 +3,8 @@ from discord.ext.commands import Bot
 import main
 import re
 import time
+import os
+
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -101,31 +103,69 @@ async def tickets(ctx):
     :param ctx:
     :return:
     """
+    message, str_result, result = generate_tickets(ctx, mode='tabulate')
+    if message:
+        await client.say(message)
+    if str_result and type(str_result) == list:
+        for s in str_result:
+            await client.say(s)
+    if not result.empty:
+        filename = '{}-tickets.xls'.format(str(ctx.message.author))
+        result.to_excel(filename, sheet_name="tickets")
+        await client.send_file(ctx.message.channel, filename)
+        os.remove(filename)
+
+
+@client.command(pass_context=True)
+async def ticketsxls(ctx):
+    """
+    Analyzes stored screenshots (the screenshots' data is actually extracted beforehand now) of a specific day and
+    returns a table of players and their respective tickets
+    :param ctx:
+    :return:
+    """
+    message, str_result, result = generate_tickets(ctx, mode='csv')
+    if message:
+        await client.say(message)
+    if str_result:
+        if type(str_result) == list:
+            for s in str_result:
+                await client.say(s)
+        else:
+            await client.say(str_result)
+    if not result.empty:
+        filename = '{}-tickets.xls'.format(str(ctx.message.author))
+        result.to_excel(filename, sheet_name="tickets")
+        await client.send_file(ctx.message.channel, filename)
+        os.remove(filename)
+
+
+def generate_tickets(ctx, mode='tabulate'):
     if not main.is_registered_guild_leader(str(ctx.message.author)):
         print("{} tried to use tickets while not being registered as guild leader".format(
             str(ctx.message.author)))
-        await client.say("Command reserved to registered guild leaders.")
-        return
+        return "Command reserved to registered guild leaders.", []
     arguments = ctx.message.content.split(' ')
     if len(arguments) >= 2:
         if len(arguments[1]) == 8 and represents_int(arguments[1]):
             print("{} is calling tickets with date {}.".format(str(ctx.message.author), arguments[1]))
             result, date = main.compute_tickets(str(ctx.message.author), arguments[1])
         else:
-            await client.say("Wrong date format. Usage: ?tickets (optional: <YYYYMMDD>")
-            return
+            return "Wrong date format. Usage: ?tickets (optional: <YYYYMMDD>", []
     else:
         print("{} is calling tickets without date.".format(str(ctx.message.author)))
         result, date = main.compute_tickets(str(ctx.message.author))
     if result.empty:
         print("{} is calling tickets but no result..".format(str(ctx.message.author)))
 
-        await client.say("Error processing images.")
+        return "Error processing images.", []
     else:
-        splitted = main.get_split_tabulate_df(result)
-        await client.say("{} Tickets:".format(date))
-        for s in splitted:
-            await client.say(s)
+        if mode == 'tabulate':
+            split = main.get_split_tabulate_df(result)
+        elif mode == 'csv':
+            split = main.get_split_csv(result)
+        message = "{} Tickets:\n".format(date)
+        return message, split, result
 
 
 @client.command(pass_context=True)
