@@ -118,11 +118,10 @@ async def tickets(ctx):
         print("{} is calling tickets without date.".format(str(ctx.message.author)))
         result, date = main.compute_tickets(str(ctx.message.author))
     if result.empty:
-        print("{} is calling tickets but no result..")
+        print("{} is calling tickets but no result..".format(str(ctx.message.author)))
 
         await client.say("Error processing images.")
     else:
-        print("{} is calling tickets but no result..")
         splitted = main.get_split_tabulate_df(result)
         await client.say("{} Tickets:".format(date))
         for s in splitted:
