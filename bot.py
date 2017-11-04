@@ -40,7 +40,7 @@ async def cmdlist(ctx):
     """
     print("{} asked for the command list!".format(str(ctx.message.author)))
     await client.say(
-        "?ping, ?cmdlist, ?toonlist, ?shiplist, ?whohas (registered guild leaders: ?tickets, ?ticket_dates, "
+        "?ping, ?cmdlist, ?toonlist, ?shiplist, ?whohas (registered guild leaders: ?tickets, ?ticket_dates, ?diff "
         "?register)")
 
 
