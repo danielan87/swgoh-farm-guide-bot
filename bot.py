@@ -4,7 +4,7 @@ import main
 import re
 import time
 import os
-
+import datetime
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -41,9 +41,43 @@ async def cmdlist(ctx):
     :return:
     """
     print("{} asked for the command list!".format(str(ctx.message.author)))
-    await client.say(
-        "?ping, ?cmdlist, ?toonlist, ?shiplist, ?whohas (registered guild leaders: ?tickets, ?ticketsxls, "
-        "?ticket_dates, ?diff, ?register)")
+    embed = discord.Embed(title="List of Commands", colour=discord.Colour(0x000000),
+                          timestamp=datetime.datetime.now())
+
+    embed.set_thumbnail(url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+    embed.set_footer(
+        text="Hogtown Bot",
+        icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+
+    embed.add_field(name="?ping", value="Check if the bot is running.", inline=False)
+    embed.add_field(name="?cmdlist", value="List all available commands.", inline=False)
+    embed.add_field(name="?toonlist", value="List of available toons. Values used by **\"?whohas\"**.",
+                    inline=False)
+    embed.add_field(name="?shiplist", value="List of available ships. Values used by **\"?whohas\"**.",
+                    inline=False)
+    embed.add_field(name="?whohas <UNIT-NAME> (optional: <MIN-STAR>)",
+                    value="List players that have this toon at a certain number of stars.\n**Example:** ?whohas CUP 7",
+                    inline=False)
+    embed.add_field(name="OFFICERS ONLY", value="**The following commands are only available to officers:**",
+                    inline=False)
+    embed.add_field(name="?tickets <DATE>",
+                    value="Gives the number of tickets of each player at the last date available or on a certain date "
+                          "in a formatted table. Also returns an Excel attachment.\nDate format must be **YYYYMMDD**.",
+                    inline=False)
+    embed.add_field(name="?ticketsxls <DATE>",
+                    value="Gives the number of tickets of each player at the last date available or on a certain date "
+                          "in an \"xls\" format (separated by \";\"). Also returns an Excel attachment."
+                          "\nDate format must be **YYYYMMDD**.", inline=False)
+    embed.add_field(name="?ticketdates",
+                    value="Returns the list of all the available dates where ticket numbers are stored "
+                          "(used by **?tickets**, **?ticketdates** and **?diff**)", inline=False)
+    embed.add_field(name="?diff <DATE_1> <DATE_2>",
+                    value="Gives the difference of tickets between two dates. \nDate format must be **YYYYMMDD**.",
+                    inline=False)
+    embed.add_field(name="?register discord_id", value="Register a player as an officer. discord_id is case sensitive!",
+                    inline=False)
+
+    await client.say(embed=embed)
 
 
 @client.command(pass_context=True)

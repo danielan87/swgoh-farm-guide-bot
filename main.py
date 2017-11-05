@@ -162,6 +162,12 @@ def get_who_has(unit, star=0):
     return ["no one :("]
 
 
+def get_who_has_generic(unit, star=0):
+    data = get_data()
+    result = [d.get('player') for d in data[unit] if d.get('rarity') > star]
+    return result
+
+
 def get_toon_list():
     return list(toons.values())
 
@@ -170,18 +176,15 @@ def get_ship_list():
     return list(ships.values())
 
 
-def download_image_into_correct_folder(author, attachment):
+def process_image(author, attachment):
     url = attachment['url']
-    r = requests.get(url)
-    now = datetime.datetime.now()
-    newpath = os.path.join('images', author)
-    if tool.check_if_ticket_image(str(author), url, mode='remote'):
-        newpath = os.path.join(newpath, 'tickets')
-    newpath = os.path.join(newpath, now.strftime('%Y%m%d'))
-    os.makedirs(newpath, exist_ok=True)
-    new_file_name = "{}_{}".format(now.strftime('%Y%m%d%H%M%S'), attachment['filename'])
-    with open(os.path.join(newpath, new_file_name), 'xb') as outfile:
-        outfile.write(r.content)
+    img_type, result, star = tool.read_and_classify_image(str(author), url, mode='remote')
+    if img_type == 'platoons':
+        new_dict = {}
+        for k, v in result.items():
+            new_dict[k] = {'needed': v}
+            new_dict[k]['players'] = get_who_has_generic(k, star)
+        return new_dict, star
 
 
 def compute_tickets(author, date=""):
