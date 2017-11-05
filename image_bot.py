@@ -27,7 +27,8 @@ async def on_message(message):
                     thumbnail_url = \
                         "https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png"
                     embed = discord.Embed(title="List of Toons in Platoon", colour=discord.Colour(0x000000),
-                                          description="List of toons detected + players that own that toon at {} Star. "
+                                          description="List of toons detected + players that own that toon at "
+                                                      "**{}** Star. "
                                                       "(Player names displayed only if we have less than or eqal to "
                                                       "10)."
                                           .format(star),
