@@ -128,7 +128,7 @@ async def whohas(ctx):
             print("{} asked who has {} at {} stars"
                   .format(str(ctx.message.author), " ".join(arguments[1:-1]), int(arguments[-1])))
         else:
-            results = main.get_who_has_generic(arguments[1])
+            results = main.get_who_has_generic(" ".join(arguments[1:]))
             print("{} asked who has {}"
                   .format(str(ctx.message.author), " ".join(arguments[1:-1])))
     if not results:
@@ -137,6 +137,9 @@ async def whohas(ctx):
         for r in results:
             name = r.get('name')
             result = r.get('result')
+            if not result:
+                await client.say("No one has {}".format(name))
+                return
             icon = r.get('icon')
             embed = discord.Embed(colour=discord.Colour(0x000000),
                                   timestamp=datetime.datetime.now(),
