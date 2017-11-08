@@ -10,7 +10,8 @@ import datetime
 import swgoh_leader_tool.swgoh_leader_tool as tool
 from tabulate import tabulate
 import math
-
+import difflib
+from settings import TOON_DATA
 
 toons = {'CORUSCANTUNDERWORLDPOLICE': 'CUP',
          'KITFISTO': 'KitFisto',
@@ -163,9 +164,19 @@ def get_who_has(unit, star=0):
 
 
 def get_who_has_generic(unit, star=0):
+    keys = []
+    for k in TOON_DATA.keys():
+        aliases = TOON_DATA.get(k).get('alias')
+        if difflib.get_close_matches(unit, aliases, 1, 0.8):
+            keys.append(k)
+    if not keys:
+        return []
     data = get_data()
-    result = [d.get('player') for d in data[unit] if d.get('rarity') > star]
-    return result
+    results = []
+    for k in keys:
+        results.append({'name': TOON_DATA[k].get('name'), 'result': [d for d in data[k] if d.get('rarity') >= star],
+                        'icon': TOON_DATA[k].get('icon')})
+    return results
 
 
 def get_toon_list():
@@ -183,7 +194,10 @@ def process_image(author, attachment):
         new_dict = {}
         for k, v in result.items():
             new_dict[k] = {'needed': v}
-            new_dict[k]['players'] = get_who_has_generic(k, star)
+            results = get_who_has_generic(k, star)
+            name = results[0].get('name')
+            new_dict[k]['players'] = results[0].get('result')
+            icon = results[0].get('icon')
         return new_dict, star
 
 
@@ -229,12 +243,11 @@ def compute_diff(author, date1, date2):
     tickets2, _ = compute_tickets(author, date2)
     tickets1.rename(columns={'Tickets': date1}, inplace=True)
     tickets2.rename(columns={'Tickets': date2}, inplace=True)
-    merged = tickets1.reset_index().merge(tickets2.reset_index(), how='outer', left_on="index", right_on="index")\
+    merged = tickets1.reset_index().merge(tickets2.reset_index(), how='outer', left_on="index", right_on="index") \
         .set_index('index').fillna(0)
     merged.loc[:, 'diff'] = merged[date1].astype(int) - merged[date2].astype(int)
     merged['diff'] = merged['diff'].abs()
     return merged
-
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))

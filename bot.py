@@ -87,6 +87,8 @@ async def toonlist(ctx):
     :param ctx:
     :return:
     """
+    await client.say("Command disabled.")
+    return
     result = main.get_toon_list()
     print("{} asked for the toon list (result: {})".format(str(ctx.message.author), ", ".join(result)))
     await client.say(", ".join(result))
@@ -99,6 +101,8 @@ async def shiplist(ctx):
         :param ctx:
         :return:
         """
+    await client.say("Command disabled.")
+    return
     result = main.get_ship_list()
     print("{} asked for the ship list (result: {})".format(str(ctx.message.author), ", ".join(result)))
     await client.say(", ".join(result))
@@ -119,14 +123,34 @@ async def whohas(ctx):
         return
     else:
         if len(arguments) > 2 and represents_int(arguments[-1]):
-            result = main.get_who_has(" ".join(arguments[1:-1]), int(arguments[-1]))
-            print("{} asked who has {} at {} stars (result: {})"
-                  .format(str(ctx.message.author), " ".join(arguments[1:-1]), int(arguments[-1]), ", ".join(result)))
+
+            results = main.get_who_has_generic(" ".join(arguments[1:-1]), int(arguments[-1]))
+            print("{} asked who has {} at {} stars"
+                  .format(str(ctx.message.author), " ".join(arguments[1:-1]), int(arguments[-1])))
         else:
-            result = main.get_who_has(arguments[1])
-            print("{} asked who has {} (result: {})"
-                  .format(str(ctx.message.author), " ".join(arguments[1:-1]), ", ".join(result)))
-    await client.say(", ".join(result))
+            results = main.get_who_has_generic(arguments[1])
+            print("{} asked who has {}"
+                  .format(str(ctx.message.author), " ".join(arguments[1:-1])))
+    if not results:
+        await client.say("No player found or unit not found...")
+    else:
+        for r in results:
+            name = r.get('name')
+            result = r.get('result')
+            icon = r.get('icon')
+            embed = discord.Embed(colour=discord.Colour(0x000000),
+                                  timestamp=datetime.datetime.now(),
+                                  description="List of players ordered by GP")
+
+            if not icon:
+                icon = ''
+            embed.set_thumbnail(
+                url=icon)
+            embed.set_footer(text="Hogtown Bot",
+                             icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+            embed.add_field(name=name, value="\n".join(["{} ({})".format(p.get('player'), p.get('power')) for p in sorted(result, key=lambda k: k['power'])]))
+
+            await client.say(embed=embed)
 
 
 @client.command(pass_context=True)
