@@ -167,7 +167,7 @@ def get_who_has_generic(unit, star=0):
     keys = []
     for k in TOON_DATA.keys():
         aliases = TOON_DATA.get(k).get('alias')
-        if difflib.get_close_matches(unit, aliases, 1, 0.8):
+        if difflib.get_close_matches(unit, aliases, 1, 0.9):
             keys.append(k)
     if not keys:
         return []
