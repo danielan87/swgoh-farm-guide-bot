@@ -355,5 +355,6 @@ TOON_DATA = {
                         'icon': 'https://swgoh.gg/static/img/assets/tex.charui_kylo_unmasked.png'},
     'FIRSTORDERSPECIALFORCESPILOT': {'name': 'First Order SF TIE Pilot', 'type': 'toon',
                                      'alias': ['first order sf tie pilot', 'first order special force tie pilot',
-                                               'tie pilot', 'fosftp']}
+                                               'tie pilot', 'fosftp'],
+                                     'icon': 'https://swgoh.gg/static/img/assets/tex.charui_firstorder_pilot.png'}
 }
