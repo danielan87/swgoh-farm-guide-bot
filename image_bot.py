@@ -29,7 +29,7 @@ async def on_message(message):
                     return
                 if type(result) == str and result == 'tickets':
                     await client.send_message(message.channel, "Tickets processed!")
-                    returngi
+                    return
                 if result:
                     thumbnail_url = \
                         "https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png"

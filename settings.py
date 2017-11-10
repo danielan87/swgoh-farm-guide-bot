@@ -349,5 +349,11 @@ TOON_DATA = {
                         'alias': ['sthan', 'stromtrooper han', 'han', 'han solo'],
                         'icon': 'https://swgoh.gg/static/img/assets/tex.charui_trooperstorm_han.png'},
     'HANSOLO': {'name': 'Han Solo', 'type': 'toon', 'alias': ['oghan', 'han solo', 'han', 'raid han'],
-                'icon': 'https://swgoh.gg/static/img/assets/tex.charui_han.png'}
+                'icon': 'https://swgoh.gg/static/img/assets/tex.charui_han.png'},
+    'KYLORENUNMASKED': {'name': 'Kylo Ren (Unmasked)', 'type': 'toon', 'alias': ['kylo', 'kylo ren',
+                                                                                 'kylo ren unmasked', 'kru'],
+                        'icon': 'https://swgoh.gg/static/img/assets/tex.charui_kylo_unmasked.png'},
+    'FIRSTORDERSPECIALFORCESPILOT': {'name': 'First Order SF TIE Pilot', 'type': 'toon',
+                                     'alias': ['first order sf tie pilot', 'first order special force tie pilot',
+                                               'tie pilot', 'fosftp']}
 }
