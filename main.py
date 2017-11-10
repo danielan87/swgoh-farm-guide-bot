@@ -189,6 +189,7 @@ def get_ship_list():
 
 def process_image(author, attachment):
     url = attachment['url']
+    # img_type in ['tickets', 'platoons', False]
     img_type, result, star = tool.read_and_classify_image(str(author), url, mode='remote')
     if img_type == 'platoons':
         new_dict = {}
@@ -199,6 +200,7 @@ def process_image(author, attachment):
             new_dict[k]['players'] = results[0].get('result')
             icon = results[0].get('icon')
         return new_dict, star
+    return img_type, None
 
 
 def compute_tickets(author, date=""):

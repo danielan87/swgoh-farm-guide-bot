@@ -68,7 +68,7 @@ async def cmdlist(ctx):
                     value="Gives the number of tickets of each player at the last date available or on a certain date "
                           "in an \"xls\" format (separated by \";\"). Also returns an Excel attachment."
                           "\nDate format must be **YYYYMMDD**.", inline=False)
-    embed.add_field(name="?ticketdates",
+    embed.add_field(name="?ticket_dates",
                     value="Returns the list of all the available dates where ticket numbers are stored "
                           "(used by **?tickets**, **?ticketdates** and **?diff**)", inline=False)
     embed.add_field(name="?diff <DATE_1> <DATE_2>",

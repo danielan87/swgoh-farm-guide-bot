@@ -17,12 +17,19 @@ async def on_ready():
 
 @client.async_event
 async def on_message(message):
-    print("{} sent an image.".format(str(message.author)))
     if message.attachments:
         for a in message.attachments:
             filename = a['filename']
             if filename.split('.')[-1].lower() in ["png", "jpg", "jpeg"]:
+                print("{} sent an image.".format(str(message.author)))
                 result, star = main.process_image(str(message.author), a)
+                if result is None:
+                    await client.send_message(message.channel, "Error processing image: the image sent was neither a "
+                                                               "Platoon or a Ticket image.")
+                    return
+                if type(result) == str and result == 'tickets':
+                    await client.send_message(message.channel, "Tickets processed!")
+                    returngi
                 if result:
                     thumbnail_url = \
                         "https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png"
