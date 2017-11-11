@@ -3,6 +3,8 @@ from discord.ext.commands import Bot
 import main
 import datetime
 import queue
+from settings import BOT_TOKEN
+
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -70,4 +72,4 @@ async def on_message(message):
                     await client.send_message(message.channel, embed=embed)
 
 
-client.run("MzcxNzY5OTgwNTU3MTk3MzI1.DM6dUw.igwuz1R0hWfTNQPh5Ery94Lrfs4")
+client.run(BOT_TOKEN)

@@ -11,7 +11,7 @@ import swgoh_leader_tool.swgoh_leader_tool as tool
 from tabulate import tabulate
 import math
 import difflib
-from settings import TOON_DATA
+from data import TOON_DATA
 
 toons = {'CORUSCANTUNDERWORLDPOLICE': 'CUP',
          'KITFISTO': 'KitFisto',
@@ -62,7 +62,7 @@ def read_dict_and_concat_to_main(dict_id, data, model_type):
 def get_data():
     """
     retrieve data from swgoh
-    https://swgoh.gg/api/guilds/27003/units/
+    https://swgoh.gg/api/guilds/<guild_id>/units/
     :return:
     """
     user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'

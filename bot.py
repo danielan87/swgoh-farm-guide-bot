@@ -5,6 +5,7 @@ import re
 import time
 import os
 import datetime
+from settings import BOT_TOKEN
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -312,4 +313,4 @@ def represents_int(s):
         return False
 
 
-client.run("MzcxNzY5OTgwNTU3MTk3MzI1.DM6dUw.igwuz1R0hWfTNQPh5Ery94Lrfs4")
+client.run(BOT_TOKEN)
