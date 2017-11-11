@@ -2,10 +2,12 @@ import discord
 from discord.ext.commands import Bot
 import main
 import datetime
+import queue
 
 Client = discord.Client()
 bot_prefix = "?"
 client = Bot(command_prefix=bot_prefix)
+q = queue.Queue()
 
 
 @client.event
@@ -21,8 +23,13 @@ async def on_message(message):
         for a in message.attachments:
             filename = a['filename']
             if filename.split('.')[-1].lower() in ["png", "jpg", "jpeg"]:
+                while True:
+                    if q.empty():
+                        break
+                q.put(a)
                 print("{} sent an image.".format(str(message.author)))
                 result, star = main.process_image(str(message.author), a)
+                q.get()
                 if result is None:
                     await client.send_message(message.channel, "Error processing image: the image sent was neither a "
                                                                "Platoon or a Ticket image.")
@@ -36,7 +43,7 @@ async def on_message(message):
                     embed = discord.Embed(title="List of Toons in Platoon", colour=discord.Colour(0x000000),
                                           description="List of toons detected + players that own that toon at "
                                                       "**{}** Star. "
-                                                      "(Player names displayed only if we have less than or eqal to "
+                                                      "(Player names displayed only if we have less than or equal to "
                                                       "10)."
                                           .format(star),
                                           timestamp=datetime.datetime.now())
