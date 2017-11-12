@@ -66,7 +66,8 @@ async def on_message(message):
                             embed.add_field(name="{}x {}".format(v.get('needed'), k),
                                             value="```{} Number of players: {} \n {}```"
                                             .format(markdown_type, len(v.get('players')),
-                                                    " \n ".join(v.get('players'))),
+                                                    " \n ".join(["{} ({})".format(p.get('player'), p.get('power'))
+                                                                 for p in v.get('players')])),
                                             inline=True)
 
                     await client.send_message(message.channel, embed=embed)

@@ -6,6 +6,9 @@ import time
 import os
 import datetime
 from settings import BOT_TOKEN
+import matplotlib
+matplotlib.rc('axes.formatter', useoffset=False)
+matplotlib.use('Agg')
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -152,7 +155,8 @@ async def whohas(ctx):
                 url=icon)
             embed.set_footer(text="Hogtown Bot",
                              icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
-            embed.add_field(name=name, value="\n".join(["{} ({})".format(p.get('player'), p.get('power')) for p in sorted(result, key=lambda k: k['power'])]))
+            embed.add_field(name=name, value="\n".join(
+                ["{} ({})".format(p.get('player'), p.get('power')) for p in sorted(result, key=lambda k: k['power'])]))
 
             await client.say(embed=embed)
 
@@ -174,7 +178,7 @@ async def tickets(ctx):
     if not result.empty:
         filename = '{}-tickets.xls'.format(str(ctx.message.author))
         result.to_excel(filename, sheet_name="tickets")
-        await client.send_file(ctx.message.channel, filename)
+        await client.upload(filename)
         os.remove(filename)
 
 
@@ -198,7 +202,7 @@ async def ticketsxls(ctx):
     if not result.empty:
         filename = '{}-tickets.xls'.format(str(ctx.message.author))
         result.to_excel(filename, sheet_name="tickets")
-        await client.send_file(ctx.message.channel, filename)
+        await client.upload(filename)
         os.remove(filename)
 
 
@@ -303,6 +307,43 @@ async def register(ctx):
             await client.say("{} registered!".format(to_register))
         else:
             await client.say("The given ID is not a discord ID.")
+
+
+@client.command(pass_context=True)
+async def guildgp(ctx):
+    """
+    Returns a plot of guild gp
+    :param ctx:
+    :return:
+    """
+    resp = main.plot_guild_gp()
+
+    plot = resp['df'].plot(colormap='jet', title="Guild Galactic Power Evolution", x_compat=True)
+    plot.get_yaxis().get_major_formatter().set_useOffset(False)
+    plot.set_xlabel("Dates")
+    plot.set_ylabel("GP")
+    fig = plot.get_figure()
+    filename = 'output.png'
+    fig.savefig(filename)
+    await client.upload(filename)
+    url = ''
+    async for message in client.logs_from(ctx.message.channel, limit=1):
+        if message.author == client.user and message.attachments:
+            url = message.attachments[0]['url']
+            await client.delete_message(message)
+    os.remove(filename)
+    embed = discord.Embed(title="Bispen's Galactic Power Evolution", colour=discord.Colour(0x000000),
+                          timestamp=datetime.datetime.now())
+
+    embed.set_image(url=url)
+    embed.set_thumbnail(url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+    embed.set_footer(text="Bispen Bot",
+                     icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+
+    if resp.get('mean'):
+        embed.add_field(name="Guild Average", value="{}GP per day".format(resp['mean']))
+
+    await client.say(embed=embed)
 
 
 def represents_int(s):

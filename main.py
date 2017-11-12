@@ -12,6 +12,10 @@ from tabulate import tabulate
 import math
 import difflib
 from data import TOON_DATA
+import redis
+from settings import REDIS_CONN_INFO, GUILD_ID
+
+r = redis.StrictRedis(host=REDIS_CONN_INFO.get('host'), port=REDIS_CONN_INFO.get('port'), db=REDIS_CONN_INFO.get('db'))
 
 toons = {'CORUSCANTUNDERWORLDPOLICE': 'CUP',
          'KITFISTO': 'KitFisto',
@@ -67,7 +71,7 @@ def get_data():
     """
     user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 
-    url = "https://swgoh.gg/api/guilds/27003/units/"
+    url = "https://swgoh.gg/api/guilds/{}/units/".format(GUILD_ID)
     headers = {'User-Agent': user_agent, }
 
     request = urllib.request.Request(url, None, headers)  # The assembled request
@@ -167,6 +171,7 @@ def get_who_has_generic(unit, star=0):
     keys = []
     for k in TOON_DATA.keys():
         aliases = TOON_DATA.get(k).get('alias')
+        aliases.append(k)
         if difflib.get_close_matches(unit, aliases, 1, 0.9):
             keys.append(k)
     if not keys:
@@ -250,6 +255,19 @@ def compute_diff(author, date1, date2):
     merged.loc[:, 'diff'] = merged[date1].astype(int) - merged[date2].astype(int)
     merged['diff'] = merged['diff'].abs()
     return merged
+
+
+def plot_guild_gp():
+    gp_list = r.lrange('guildgp:values:{}'.format(GUILD_ID), 0, -1)
+    date_list = r.lrange('guildgp:dates:{}'.format(GUILD_ID), 0, -1)
+    gp_list = [int(i) for i in gp_list]
+    date_list = [d.decode('utf-8') for d in date_list]
+    resp = dict()
+    if len(gp_list) > 1:
+        resp['mean'] = [t - s for s, t in zip(gp_list, gp_list[1:])]
+        resp['mean'] = sum(resp['mean'])/float(len(resp['mean']))
+    resp['df'] = pd.DataFrame(gp_list, index=date_list, columns=['Guild GP'])
+    return resp
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
