@@ -4,7 +4,7 @@ import main
 import datetime
 import queue
 from settings import BOT_TOKEN
-
+import functools
 
 Client = discord.Client()
 bot_prefix = "?"
@@ -19,19 +19,25 @@ async def on_ready():
     print("ID: {}".format(client.user.id))
 
 
-@client.async_event
+def process_image(author, a):
+    return main.process_image(author, a)
+
+
+@client.event
 async def on_message(message):
+    # await client.wait_until_ready()
     if message.attachments:
         for a in message.attachments:
             filename = a['filename']
             if filename.split('.')[-1].lower() in ["png", "jpg", "jpeg"]:
-                while True:
-                    if q.empty():
-                        break
-                q.put(a)
+                # while True:
+                #     if q.empty():
+                #         break
+                # q.put(a)
                 print("{} sent an image.".format(str(message.author)))
-                result, star = main.process_image(str(message.author), a)
-                q.get()
+                procim = functools.partial(process_image, str(message.author), a)
+                result, star = await client.loop.run_in_executor(None, procim)
+                # q.get()
                 if result is None:
                     await client.send_message(message.channel, "Error processing image: the image sent was neither a "
                                                                "Platoon or a Ticket image.")

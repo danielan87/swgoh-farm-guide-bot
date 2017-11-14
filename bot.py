@@ -113,12 +113,15 @@ async def shiplist(ctx):
 
 
 @client.command(pass_context=True)
-async def whohas(ctx):
+async def whohas(ctx, toon : str, star : int=0):
     """
     returns who possesses a toon or ship
     :param ctx:
     :return:
     """
+    # todo: replce split by this
+    print(toon)
+    print(star)
     arguments = ctx.message.content.split(' ')
     if len(arguments) == 1:
         await client.say("Usage: ?whohas <UNIT-NAME> (optional: <MIN-STAR>")
