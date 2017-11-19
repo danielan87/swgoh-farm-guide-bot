@@ -5,12 +5,18 @@ import datetime
 import queue
 from settings import BOT_TOKEN
 import functools
+import logging
 
 Client = discord.Client()
 bot_prefix = "?"
 client = Bot(command_prefix=bot_prefix)
 q = queue.Queue()
 
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord-image-bot.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 @client.event
 async def on_ready():

@@ -1,4 +1,5 @@
 import discord
+import logging
 from discord.ext.commands import Bot
 import main
 import re
@@ -9,6 +10,12 @@ from settings import BOT_TOKEN
 import matplotlib
 matplotlib.rc('axes.formatter', useoffset=False)
 matplotlib.use('Agg')
+
+logger = logging.getLogger('discord')
+logger.setLevel(logging.DEBUG)
+handler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
+handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(message)s'))
+logger.addHandler(handler)
 
 Client = discord.Client()
 bot_prefix = "?"
