@@ -14,6 +14,7 @@ import difflib
 from data import TOON_DATA
 import redis
 from settings import REDIS_CONN_INFO, GUILD_ID
+from get_platoons_json import *
 
 r = redis.StrictRedis(host=REDIS_CONN_INFO.get('host'), port=REDIS_CONN_INFO.get('port'), db=REDIS_CONN_INFO.get('db'))
 
@@ -72,6 +73,32 @@ def get_data():
     user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 
     url = "https://swgoh.gg/api/guilds/{}/units/".format(GUILD_ID)
+    headers = {'User-Agent': user_agent, }
+
+    request = urllib.request.Request(url, None, headers)  # The assembled request
+    response = urllib.request.urlopen(request)
+    data = json.loads(response.read().decode(), )  # The data u need
+
+    return data
+
+
+def get_characters_media():
+    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+
+    url = "https://swgoh.gg/api/characters/?format=json"
+    headers = {'User-Agent': user_agent, }
+
+    request = urllib.request.Request(url, None, headers)  # The assembled request
+    response = urllib.request.urlopen(request)
+    data = json.loads(response.read().decode(), )  # The data u need
+
+    return data
+
+
+def get_ships_media():
+    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+
+    url = "https://swgoh.gg/api/ships/?format=json"
     headers = {'User-Agent': user_agent, }
 
     request = urllib.request.Request(url, None, headers)  # The assembled request
@@ -268,6 +295,61 @@ def plot_guild_gp():
         resp['mean'] = sum(resp['mean'])/float(len(resp['mean']))
     resp['df'] = pd.DataFrame(gp_list, index=date_list, columns=['Guild GP'])
     return resp
+
+
+def get_toon_count_per_rarity(guild_data, star):
+    toons = {}
+    for toon_name, players in guild_data.items():
+        sub_list = [player for player in players if player['rarity'] >= star]
+        toons[toon_name] = len(sub_list)
+    return toons
+
+
+def get_toons_with_rarity(rarity):
+    toon_media = get_characters_media()
+    ship_media = get_ships_media()
+    data = get_data()
+    toon_res = []
+    ship_res = []
+    for t in toon_media:
+        if t['base_id'] in data.keys():
+            sub_list = data[t['base_id']]
+            c = len([item for item in sub_list if item['rarity'] >= rarity])
+        else:
+            c = 0
+        if c < 8:
+            t['need'] = 8 - c
+            toon_res.append(t)
+    for t in ship_media:
+        if t['base_id'] in data.keys():
+            sub_list = data[t['base_id']]
+            c = len([item for item in sub_list if item['rarity'] >= rarity])
+        else:
+            c = 0
+        if c < 8:
+            t['need'] = 8 - c
+            ship_res.append(t)
+    return toon_res, ship_res
+
+
+def analyze_platoons(file_path):
+    platoons = analyze_platoon_json(get_platoons_from_rpc(file_path))
+    guild_data = get_data()
+    star = 2
+    computed = {}
+    for phase_name, conflicts in platoons.items():
+        toon_count = get_toon_count_per_rarity(guild_data, star)
+        computed[phase_name] = {}
+        for platoon_num, platoon_list in conflicts.items():
+            for plat, required in platoon_list.items():
+                for toon in required:
+                    if toon_count.get(toon):
+                        toon_count[toon] -= 1
+                    else:
+                        toon_count[toon] = -1
+        computed[phase_name] = {x: y for x, y in toon_count.items() if y < 0}
+        star += 1
+    return computed
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))

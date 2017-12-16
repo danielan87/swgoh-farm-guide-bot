@@ -69,6 +69,9 @@ async def cmdlist(ctx):
     embed.add_field(name="?whohas <UNIT-NAME> (optional: <MIN-STAR>)",
                     value="List players that have this toon at a certain number of stars.\n**Example:** ?whohas CUP 7",
                     inline=False)
+    embed.add_field(name="?farmneeds",
+                    value="List of toons/ships we have less than 8 of",
+                    inline=False)
     embed.add_field(name="OFFICERS ONLY", value="**The following commands are only available to officers:**",
                     inline=False)
     embed.add_field(name="?tickets <DATE>",
@@ -339,17 +342,44 @@ async def guildgp(ctx):
             url = message.attachments[0]['url']
             await client.delete_message(message)
     os.remove(filename)
-    embed = discord.Embed(title="Bispen's Galactic Power Evolution", colour=discord.Colour(0x000000),
+    embed = discord.Embed(title="Bespin's Galactic Power Evolution", colour=discord.Colour(0x000000),
                           timestamp=datetime.datetime.now())
 
     embed.set_image(url=url)
     embed.set_thumbnail(url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
-    embed.set_footer(text="Bispen Bot",
+    embed.set_footer(text="Bespin Bot",
                      icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
 
     if resp.get('mean'):
         embed.add_field(name="Guild Average", value="{}GP per day".format(resp['mean']))
 
+    await client.say(embed=embed)
+
+
+@client.command(pass_context=True)
+async def farmneeds(ctx):
+    """
+    Returns a plot of guild gp
+    :param ctx:
+    :return:
+    """
+    toons, ships = main.get_toons_with_rarity(7)
+
+    toon_res = ''
+    ship_res = ''
+    for t in toons:
+        toon_res += "{}: {}\n".format(t['name'], t['need'])
+    for t in ships:
+        ship_res += "{}: {}\n".format(t['name'], t['need'])
+    embed = discord.Embed(title="Bespin's Farm Needs", colour=discord.Colour(0x000000),
+                          timestamp=datetime.datetime.now())
+
+    embed.set_thumbnail(url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+    embed.set_footer(text="Bespin Bot",
+                     icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
+
+    embed.add_field(name='Characters:', value=toon_res)
+    embed.add_field(name='Ships:', value=ship_res)
     await client.say(embed=embed)
 
 
