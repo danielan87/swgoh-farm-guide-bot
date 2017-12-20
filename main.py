@@ -301,6 +301,12 @@ def get_toon_count_per_rarity(guild_data, star):
     toons = {}
     for toon_name, players in guild_data.items():
         sub_list = [player for player in players if player['rarity'] >= star]
+        if not sub_list:
+            toons[toon_name] = 0
+            continue
+        df = pd.DataFrame(sub_list)
+        df = df.sort_values('power', ascending=False).drop_duplicates(subset='player', keep='first')
+        sub_list = list(df.T.to_dict().values())
         toons[toon_name] = len(sub_list)
     return toons
 

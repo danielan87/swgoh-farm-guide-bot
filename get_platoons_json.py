@@ -17,6 +17,7 @@ def analyze_platoon_json(res):
         # name is something like phase01_conflict01_recon01
         name = ter['name']
         name = name.split('_')
+        name = [n for n in name if n not in ['hoth', 'empire']]
         if not platoons.get(name[0]):
             platoons[name[0]] = {}
         platoons[name[0]][name[1]] = {}
