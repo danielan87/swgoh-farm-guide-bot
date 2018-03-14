@@ -292,7 +292,7 @@ def plot_guild_gp():
     resp = dict()
     if len(gp_list) > 1:
         resp['mean'] = [t - s for s, t in zip(gp_list, gp_list[1:])]
-        resp['mean'] = sum(resp['mean'])/float(len(resp['mean']))
+        resp['mean'] = sum(resp['mean']) / float(len(resp['mean']))
     resp['df'] = pd.DataFrame(gp_list, index=date_list, columns=['Guild GP'])
     return resp
 
@@ -356,6 +356,60 @@ def analyze_platoons(file_path):
         computed[phase_name] = {x: y for x, y in toon_count.items() if y < 0}
         star += 1
     return computed
+
+
+def convert_to_media_name(platoon_list, toons_media, ships_media):
+    for i in range(len(platoon_list)):
+        for j in range(len(platoon_list[i])):
+            data = [t for t in toons_media if t.get('base_id') and t['base_id'] == platoon_list[i][j]]
+            if not data:
+                data = [t for t in ships_media if t.get('base_id') and t['base_id'] == platoon_list[i][j]]
+            platoon_list[i][j] = data[0]['name']
+    return platoon_list
+
+
+def create_template_for_spreadsheet(file_path):
+    platoons = analyze_platoon_json(get_platoons_from_rpc(file_path))
+    toons_media = get_characters_media()
+    ships_media = get_ships_media()
+    df = pd.DataFrame(
+        columns=['Phase', 'refresh', '#1', '1', 'recommended 1', 'void 1', '#2', '2', 'recommended 2', 'void 2', '#3',
+                 '3', 'recommended 3', 'void 1', '#4', '4',
+                 'recommended 4', 'void 4', '#5', '5', 'recommended 5', 'void 5', '#6', '6', 'recommended 6', 'void 6'])
+    idx = 0
+    for phase, conflicts in platoons.items():
+        phase_num = phase[-1]
+        for conflict, platoons in conflicts.items():
+            first = True
+            platoon_list = []
+            for platoon_name, platoon in platoons.items():
+                platoon_list.append(platoon)
+            platoon_list = convert_to_media_name(platoon_list, toons_media, ships_media)
+            for j in range(len(platoon_list[0])):
+                row = []
+                if first:
+                    row += [phase_num]
+                    first = False
+                else:
+                    row += ['']
+                row += ['']
+                for i in range(6):
+                    row += [j + 1, platoon_list[i][j], '', '']
+                df.loc[idx] = row
+                idx += 1
+            df.loc[idx] = [''] * len(row)
+            idx += 1
+            df.loc[idx] = [''] * len(row)
+            idx += 1
+            df.loc[idx] = ['', '', '#', 'Platoon 1', 'Recommended', '', '#', 'Platoon 2', 'Recommended', '', '#',
+                           'Platoon 3', 'Recommended', '', '#', 'Platoon 4', 'Recommended', '', '#', 'Platoon 5',
+                           'Recommended', '', '#', 'Platoon 6', 'Recommended', '']
+            idx += 1
+    return df
+
+
+def save_roster_gp(guild_link):
+
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))

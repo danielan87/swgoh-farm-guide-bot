@@ -62,10 +62,6 @@ async def cmdlist(ctx):
 
     embed.add_field(name="?ping", value="Check if the bot is running.", inline=False)
     embed.add_field(name="?cmdlist", value="List all available commands.", inline=False)
-    embed.add_field(name="?toonlist", value="List of available toons. Values used by **\"?whohas\"**.",
-                    inline=False)
-    embed.add_field(name="?shiplist", value="List of available ships. Values used by **\"?whohas\"**.",
-                    inline=False)
     embed.add_field(name="?whohas <UNIT-NAME> (optional: <MIN-STAR>)",
                     value="List players that have this toon at a certain number of stars.\n**Example:** ?whohas CUP 7",
                     inline=False)
@@ -92,34 +88,6 @@ async def cmdlist(ctx):
                     inline=False)
 
     await client.say(embed=embed)
-
-
-@client.command(pass_context=True)
-async def toonlist(ctx):
-    """
-    List of toons that we can query. It's limited to our needs
-    :param ctx:
-    :return:
-    """
-    await client.say("Command disabled.")
-    return
-    result = main.get_toon_list()
-    print("{} asked for the toon list (result: {})".format(str(ctx.message.author), ", ".join(result)))
-    await client.say(", ".join(result))
-
-
-@client.command(pass_context=True)
-async def shiplist(ctx):
-    """
-        List of ships that we can query. It's limited to our needs
-        :param ctx:
-        :return:
-        """
-    await client.say("Command disabled.")
-    return
-    result = main.get_ship_list()
-    print("{} asked for the ship list (result: {})".format(str(ctx.message.author), ", ".join(result)))
-    await client.say(", ".join(result))
 
 
 @client.command(pass_context=True)
@@ -365,6 +333,8 @@ async def farmneeds(ctx):
     """
     toons, ships = main.get_toons_with_rarity(7)
 
+    toons = sorted(toons, key=lambda k: k['need'])
+    ships = sorted(ships, key=lambda k: k['need'])
     toon_res = ''
     ship_res = ''
     for t in toons:
