@@ -31,3 +31,7 @@ def store_guild_roster_gp(guild_link):
         os.makedirs(directory)
     df.to_csv(directory + csv_filename, index=False)
     return True
+
+
+if __name__ == "__main__":
+    store_guild_roster_gp('https://swgoh.gg/g/861/force-is-strong-between-us/')
