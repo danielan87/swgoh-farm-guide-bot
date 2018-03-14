@@ -407,10 +407,6 @@ def create_template_for_spreadsheet(file_path):
             idx += 1
     return df
 
-
-def save_roster_gp(guild_link):
-
-
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
 #     toons_df = create_toons_df(formula=True)
