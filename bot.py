@@ -66,7 +66,7 @@ async def cmdlist(ctx):
                     value="List players that have this toon at a certain number of stars.\n**Example:** ?whohas CUP 7",
                     inline=False)
     embed.add_field(name="?farmneeds",
-                    value="List of toons/ships we have less than 8 of",
+                    value="List of toons/ships we have less than 8 of ",
                     inline=False)
     embed.add_field(name="OFFICERS ONLY", value="**The following commands are only available to officers:**",
                     inline=False)
