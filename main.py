@@ -422,7 +422,7 @@ def analyze_roster(url):
     guild_id = guild_url.split('/')[2]
     guild_url = 'https://swgoh.gg/api/guilds/{}/units/'.format(guild_id)
     roster_data = requests.get(guild_url)
-    roster_data = json.loads(roster_data.content)
+    roster_data = json.loads(str(roster_data.content))
 
     char_media = get_characters_media()
     teams = {}
