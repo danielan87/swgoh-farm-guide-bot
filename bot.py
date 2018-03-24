@@ -8,6 +8,7 @@ import os
 import datetime
 from settings import BOT_TOKEN
 import matplotlib
+
 matplotlib.rc('axes.formatter', useoffset=False)
 matplotlib.use('Agg')
 
@@ -341,16 +342,47 @@ async def farmneeds(ctx):
         toon_res += "{}: {}\n".format(t['name'], t['need'])
     for t in ships:
         ship_res += "{}: {}\n".format(t['name'], t['need'])
-    embed = discord.Embed(title="Bespin's Farm Needs", colour=discord.Colour(0x000000),
+    embed = discord.Embed(title="JnJ's Farm Needs", colour=discord.Colour(0x000000),
                           timestamp=datetime.datetime.now())
 
     embed.set_thumbnail(url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
-    embed.set_footer(text="Bespin Bot",
+    embed.set_footer(text="DSR Bot",
                      icon_url="https://cdn.discordapp.com/icons/220661132938051584/c4a8d173a5453075db64264387413fff.png")
 
     embed.add_field(name='Characters:', value=toon_res)
     embed.add_field(name='Ships:', value=ship_res)
     await client.say(embed=embed)
+
+
+@client.command(pass_context=True)
+async def analyze_roster(ctx, url):
+    response = main.analyze_roster(url)
+    if not response:
+        await client.say("invalid url")
+        return
+
+    for team_name, values in response.items():
+        embed = discord.Embed(title="{} Readiness for HSTR".format(team_name), colour=discord.Colour(0x000000),
+                              url=url,
+                              timestamp=datetime.datetime.now())
+        embed.set_thumbnail(url="https:{}".format(values['icon']))
+        embed.set_author(name="DeathStarRow Bot",
+                         icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+        embed.set_footer(text="DeathStarRow",
+                         icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+        total_completion = 0
+        for toon in values.values():
+            if isinstance(toon, str):
+                continue
+            msg = "G{} / {} stars / level {} / {} power / completion: {:.2f}%".format(toon.get('gear_level', 0),
+                                                                                      toon.get('rarity', 0),
+                                                                                      toon.get('level', 0),
+                                                                                      toon.get('power', 0),
+                                                                                      toon['completion'])
+            total_completion += toon['completion']
+            embed.add_field(name=toon['name'], value=msg, inline=True)
+        embed.add_field(name="Readiness", value="**{:.2f}%**".format(total_completion / len(values)), inline=False)
+        await client.say(embed=embed)
 
 
 def represents_int(s):

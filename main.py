@@ -1,11 +1,12 @@
 import pandas as pd
-from pandas import ExcelWriter
+from lxml import html
 import os
 import urllib.request
 import json
 from string import ascii_uppercase
 import xlwt
 import requests
+from  requests.exceptions import *
 import datetime
 import swgoh_leader_tool.swgoh_leader_tool as tool
 from tabulate import tabulate
@@ -406,6 +407,51 @@ def create_template_for_spreadsheet(file_path):
                            'Recommended', '', '#', 'Platoon 6', 'Recommended', '']
             idx += 1
     return df
+
+
+def analyze_roster(url):
+    try:
+        page = requests.get(url)
+    except MissingSchema:
+        return None
+    player_id = url.split('/')[-2]
+    tree = html.fromstring(page.content)
+    aside = tree.xpath('//div[contains(@class, "content-container-aside")]')
+    pguild = aside[0].xpath('.//p[.//text()="Guild "]')
+    guild_url = pguild[0].xpath('.//a/@href')[0]
+    guild_id = guild_url.split('/')[2]
+    guild_url = 'https://swgoh.gg/api/guilds/{}/units/'.format(guild_id)
+    roster_data = requests.get(guild_url)
+    roster_data = json.loads(roster_data.content)
+
+    char_media = get_characters_media()
+    teams = {}
+    teams['Phase 1 - JTR'] = ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'RESISTANCETROOPER']
+    teams['Phase 3 - Chex Mix'] = ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'CHIRRUTIMWE', 'PAO']
+    teams['Phase 4 - NS'] = ['ASAJVENTRESS', 'DAKA', 'NIGHTSISTERACOLYTE', 'TALIA', 'NIGHTSISTERINITIATE']
+
+    global_data = {}
+    for k, v in teams.items():
+        player_data = {}
+        icon = ''
+        for unit in v:
+            temp = roster_data.get(unit)
+            toon_media = [c for c in char_media if c['base_id'] == unit][0]
+            if not icon:
+                icon = toon_media['image']
+            player_toon_data = [t for t in temp if player_id in t['url']]
+            if player_toon_data:
+                player_data[unit] = [t for t in temp if player_id in t['url']][0]
+            else:
+                player_data[unit] = {}
+            player_data[unit]['name'] = toon_media['name']
+            if player_toon_data:
+                player_data[unit]['completion'] = player_data[unit]['power'] / toon_media['power'] * 100.0
+            else:
+                player_data[unit]['completion'] = 0.0
+        global_data[k] = player_data
+        global_data[k]['icon'] = icon
+    return global_data
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
