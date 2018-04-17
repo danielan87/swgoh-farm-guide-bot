@@ -6,7 +6,7 @@ import json
 from string import ascii_uppercase
 import xlwt
 import requests
-from  requests.exceptions import *
+from requests.exceptions import *
 import datetime
 import swgoh_leader_tool.swgoh_leader_tool as tool
 from tabulate import tabulate

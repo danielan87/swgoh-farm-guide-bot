@@ -2,6 +2,7 @@ import discord
 import logging
 from discord.ext.commands import Bot
 import main
+import hstr_readiness
 import re
 import time
 import os
@@ -383,6 +384,25 @@ async def analyze_roster(ctx, url):
             embed.add_field(name=toon['name'], value=msg, inline=True)
         embed.add_field(name="Readiness", value="**{:.2f}%**".format(total_completion / len(values)), inline=False)
         await client.say(embed=embed)
+
+
+@client.command(pass_context=True)
+async def hstrready(ctx, url):
+    messages = hstr_readiness.analyze_guild_hstr_readiness(url)
+    if not messages:
+        await client.say("invalid url")
+        return
+
+    embed = discord.Embed(title="HSTR Readiness", colour=discord.Colour(0x000000),
+                          url=url,
+                          timestamp=datetime.datetime.now())
+    embed.set_author(name="DeathStarRow Bot",
+                     icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+    embed.set_footer(text="DeathStarRow",
+                     icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+    for msg in messages:
+        embed.add_field(name=msg[0], value=msg[1], inline=True)
+    await client.say(embed=embed)
 
 
 def represents_int(s):
