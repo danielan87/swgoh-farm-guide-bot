@@ -401,7 +401,7 @@ async def hstrready(ctx, url):
     embed.set_footer(text="DeathStarRow",
                      icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
     for msg in messages:
-        embed.add_field(name=msg[0], value=msg[1], inline=True)
+        embed.add_field(name=msg[0], value=msg[1], inline=False)
     await client.say(embed=embed)
 
 
