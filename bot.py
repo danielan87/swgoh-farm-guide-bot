@@ -117,7 +117,7 @@ async def whohas(ctx):
                 icon = ''
             embed.set_thumbnail(
                 url=icon)
-            embed.set_footer(text="Hogtown Bot",
+            embed.set_footer(text="DSR Bot",
                              icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
             embed.add_field(name=name, value="\n".join(
                 ["{} ({})".format(p.get('player'), p.get('power')) for p in sorted(result, key=lambda k: k['power'])]))
