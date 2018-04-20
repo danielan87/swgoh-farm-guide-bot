@@ -7,37 +7,37 @@ import html
 HSTR_TEAMS = {
     'PHASE1': [
         {'NAME': 'JTR 1', 'TOONS': ['REYJEDITRAINING', 'BB8', 'RESISTANCETROOPER', 'REY', 'VISASMARR'],
-         'GOAL': 4, 'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'GOAL': 4, 'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 3', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'VISASMARR'], 'GOAL': 4,
-         'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 2', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'RESISTANCETROOPER'],
-         'GOAL': 4, 'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'GOAL': 4, 'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 4', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'BARRISSOFFEE'], 'GOAL': 4,
-         'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 5', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'HERMITYODA'], 'GOAL': 4,
-         'MIN_GP': 80000, 'zetas': ['Inspirational Presence']}
+         'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']}
     ],
     'PHASE3': [
         {'NAME': 'Chex Mix with Pao and Chirrut',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'PAO', 'CHIRRUTIMWE'],
-         'GOAL': 4, 'MIN_GP': 75000, 'zetas': ['Shoots First']},
+         'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']},
         {'NAME': 'Chex Mix with JKA and Chirrut',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'ANAKINKNIGHT', 'CHIRRUTIMWE'],
-         'GOAL': 4, 'MIN_GP': 75000, 'zetas': ['Shoots First']},
+         'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']},
         {'NAME': 'Chex Mix with Pao and Rex',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'PAO', 'CT7567'],
-         'GOAL': 4, 'MIN_GP': 75000, 'zetas': ['Shoots First']},
+         'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']},
         {'NAME': 'Chex Mix with JKA and Rex',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'ANAKINKNIGHT', 'CT7567'],
-         'GOAL': 4, 'MIN_GP': 75000, 'zetas': ['Shoots First']}
+         'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']}
     ],
     'PHASE2': [
         {'NAME': 'Pathfinder\'s Training with Leia',
          'TOONS': ['PRINCESSLEIA', 'HERMITYODA', 'SCARIFREBEL', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3'],
-         'GOAL': 3, 'MIN_GP': 80000, 'zetas': ['Do or Do Not']},
+         'GOAL': 3, 'MIN_GP': 80000, 'ZETAS': ['Do or Do Not']},
         {'NAME': 'Pathfinder\'s Training',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HERMITYODA', 'SCARIFREBEL', 'EZRABRIDGERS3', 'SABINEWRENS3'],
-         'GOAL': 3, 'MIN_GP': 80000, 'zetas': ['Do or Do Not']},
+         'GOAL': 3, 'MIN_GP': 80000, 'ZETAS': ['Do or Do Not']},
         {'NAME': 'Boba lead Wampa',
          'TOONS': ['BOBAFETT', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3', 'R2D2_LEGENDARY', 'WAMPA'],
          'GOAL': 3, 'MIN_GP': 80000},
@@ -48,57 +48,57 @@ HSTR_TEAMS = {
          'TOONS': ['LUMINARAUNDULI', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3', 'R2D2_LEGENDARY', 'WAMPA'],
          'GOAL': 2, 'MIN_GP': 80000},
         {'NAME': 'JTR 1', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'RESISTANCETROOPER'],
-         'GOAL': 3.5, 'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'GOAL': 3.5, 'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 2', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'VISASMARR'], 'GOAL': 3.5,
-         'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 3', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'BARRISSOFFEE'], 'GOAL': 3.5,
-         'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 4', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'HERMITYODA'], 'GOAL': 3.5,
-         'MIN_GP': 80000, 'zetas': ['Inspirational Presence']},
+         'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'Phoenix', 'TOONS': ['HERASYNDULLAS3', 'SABINEWRENS3', 'ZEBS3', 'EZRABRIDGERS3', 'KANANJARRUSS3'],
          'GOAL': 2, 'MIN_GP': 80000},
         {'NAME': 'Phoenix zetad',
          'TOONS': ['HERASYNDULLAS3', 'SABINEWRENS3', 'ZEBS3', 'EZRABRIDGERS3', 'KANANJARRUSS3'],
          'GOAL': 4, 'MIN_GP': 80000,
-         'zetas': ['Demolish', 'Total Defense', 'Flourish', 'Staggering Sweep', 'Play to Strengths']},
+         'ZETAS': ['Demolish', 'Total Defense', 'Flourish', 'Staggering Sweep', 'Play to Strengths']},
         {'NAME': 'Ewoks', 'TOONS': ['CHIEFCHIRPA', 'WICKET', 'EWOKELDER', 'EWOKSCOUT', 'LOGRAY'], 'GOAL': 0.5,
-         'MIN_GP': 80000, 'zetas': ['Simple Tactics']},
+         'MIN_GP': 80000, 'ZETAS': ['Simple Tactics']},
         {'NAME': 'Sith + Vader', 'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'VADER'], 'GOAL': 0.5,
-         'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Sith + Marauder', 'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'SITHMARAUDER'],
          'GOAL': 0.5,
-         'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Sith + Marauder', 'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'DARTHSION'],
-         'GOAL': 0.5, 'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'GOAL': 0.5, 'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Sith + Marauder',
          'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'EMPERORPALPATINE'], 'GOAL': 0.5,
-         'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Sith + Marauder', 'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'COUNTDOOKU'],
-         'GOAL': 0.5, 'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'GOAL': 0.5, 'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Sith + Marauder', 'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'SAVAGEOPRESS'],
-         'GOAL': 0.5, 'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'GOAL': 0.5, 'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Sith + Marauder', 'TOONS': ['MAUL', 'DARTHNIHILUS', 'SITHTROOPER', 'SITHASSASSIN', 'DARTHSIDIOUS'],
-         'GOAL': 0.5, 'MIN_GP': 80000, 'zetas': ['Dancing Shadows']},
+         'GOAL': 0.5, 'MIN_GP': 80000, 'ZETAS': ['Dancing Shadows']},
         {'NAME': 'Thrawnpers without DT',
          'TOONS': ['GRANDADMIRALTHRAWN', 'VEERS', 'COLONELSTARCK', 'SHORETROOPER', 'SNOWTROOPER'],
-         'GOAL': 0.5, 'MIN_GP': 80000, 'zetas': ['Aggressive Tactician']},
+         'GOAL': 0.5, 'MIN_GP': 80000, 'ZETAS': ['Aggressive Tactician']},
     ],
     'PHASE4_WITH_DN': [
         {'NAME': 'Nightsisters with MT and Zombie 1',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'TALIA', 'NIGHTSISTERZOMBIE', 'MOTHERTALZIN'], 'GOAL': 15,
-         'MIN_GP': 80000, 'zetas': ['Nightsister Swiftness']},
+         'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
         {'NAME': 'Nightsisters with MT and Zombie 2',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'NIGHTSISTERACOLYTE', 'NIGHTSISTERZOMBIE', 'MOTHERTALZIN'], 'GOAL': 15,
-         'MIN_GP': 80000, 'zetas': ['Nightsister Swiftness']},
+         'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
         {'NAME': 'Nightsisters with MT',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'TALIA', 'NIGHTSISTERACOLYTE', 'MOTHERTALZIN'], 'GOAL': 10,
-         'MIN_GP': 80000, 'zetas': ['Nightsister Swiftness']},
+         'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
         {'NAME': 'Nightsisters with Zombie',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'TALIA', 'NIGHTSISTERACOLYTE', 'NIGHTSISTERZOMBIE'], 'GOAL': 10,
-         'MIN_GP': 80000, 'zetas': ['Nightsister Swiftness']},
+         'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
         {'NAME': 'Nightsisters',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'TALIA', 'NIGHTSISTERACOLYTE', 'NIGHTSISTERINITIATE'], 'GOAL': 5,
-         'MIN_GP': 80000, 'zetas': ['Nightsister Swiftness']},
+         'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
     ]
 }
 
@@ -173,7 +173,10 @@ def analyze_guild_hstr_readiness(url):
 
     readiness = {}
     for phase, teams in HSTR_TEAMS.items():
-        readiness[phase] = {'remaining': 100, 'teams': []}
+        total = 100
+        if phase == 'PHASE4_WITH_DN':
+            total = 95
+        readiness[phase] = {'remaining': total, 'teams': []}
         phase_ready = False
         for player_name, player_roster in guild_dict.items():
             if phase_ready:
@@ -185,7 +188,7 @@ def analyze_guild_hstr_readiness(url):
                     power = 0
                     IDS = []
                     player_zetas = guild_zetas.get(player_name)
-                    team_zetas = team.get('zetas')
+                    team_zetas = team.get('ZETAS')
 
                     if team_zetas:
                         if not player_zetas:
@@ -257,3 +260,23 @@ def analyze_guild_hstr_readiness(url):
                     team['comp'] = team_str
                     break
     return msg
+
+
+def get_hstr_teams():
+    char_media = get_characters_media()
+    result = {}
+    for phase, teams in HSTR_TEAMS.items():
+        result[phase] = {}
+        for team in teams:
+            s = ''
+            for toon in team['TOONS']:
+                s += [c['name'] for c in char_media if c['base_id'] == toon][0] + ', '
+            s = s[:-2]
+            if team.get('ZETAS'):
+                s += '. Mandatory zetas: '
+                for z in team['ZETAS']:
+                    s += z + ', '
+                s = s[:-2]
+            s += '. Goal: {}%.'.format(team['GOAL'])
+            result[phase][team['NAME']] = s
+    return result
