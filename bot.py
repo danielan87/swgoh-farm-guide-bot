@@ -68,6 +68,9 @@ async def h(ctx):
     embed.add_field(name="?sithraid",
                     value="Analyze Heroic Sith Raid Readiness for a guild (usage: ?sithraid <swgoh.gg url of the guild>",
                     inline=False)
+    embed.add_field(name="?sithraidteams",
+                    value="Teams used to analyze your roster for the raid.",
+                    inline=False)
 
     await client.say(embed=embed)
 
