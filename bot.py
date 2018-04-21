@@ -68,13 +68,14 @@ async def h(ctx):
     embed.add_field(name="?ping", value="Check if the bot is running.", inline=False)
     embed.add_field(name="?h", value="List all available commands.", inline=False)
     embed.add_field(name="?sithraid",
-                    value="Analyze Heroic Sith Raid Readiness for a guild (usage: ?sithraid <swgoh.gg url of the guild>",
+                    value="Analyze Heroic Sith Raid Readiness for a guild "
+                          "(usage: ?sithraid <swgoh.gg url of the guild>).",
                     inline=False)
     embed.add_field(name="?sithraidteams",
                     value="Teams used to analyze your roster for the raid.",
                     inline=False)
     embed.add_field(name="For more help or suggestions:",
-                    value="JubeiNabeshin#8860",
+                    value="Contact JubeiNabeshin#8860",
                     inline=False)
     embed.add_field(name="About DSR:",
                     value="DeathStarRow is an alliance of 3 guilds, from 100m to 150m GP. 2 guilds have HSTR on farm!",
