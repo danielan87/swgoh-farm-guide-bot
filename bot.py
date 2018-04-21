@@ -23,6 +23,7 @@ logger.addHandler(handler)
 Client = discord.Client()
 bot_prefix = "?"
 client = Bot(command_prefix=bot_prefix)
+client.remove_command("help")
 
 
 @client.event
@@ -71,6 +72,24 @@ async def h(ctx):
                     inline=False)
     embed.add_field(name="?sithraidteams",
                     value="Teams used to analyze your roster for the raid.",
+                    inline=False)
+    embed.add_field(name="For more help or suggestions:",
+                    value="JubeiNabeshin#8860",
+                    inline=False)
+    embed.add_field(name="About DSR:",
+                    value="DeathStarRow is an alliance of 3 guilds, from 100m to 150m GP. 2 guilds have HSTR on farm!",
+                    inline=False)
+    embed.add_field(name="SWA:",
+                    value="https://swgoh.gg/g/646/deathstarrow-swa/",
+                    inline=False)
+    embed.add_field(name="J&J:",
+                    value="https://swgoh.gg/g/861/force-is-strong-between-us/",
+                    inline=False)
+    embed.add_field(name="SOK:",
+                    value="https://swgoh.gg/g/27003/deathstarrow-sok/",
+                    inline=False)
+    embed.add_field(name="Recruitment server:",
+                    value="https://discord.gg/AhMvsJT",
                     inline=False)
 
     await client.say(embed=embed)
@@ -408,6 +427,11 @@ async def sithraidteams(ctx):
             embed.add_field(name=name, value=msg, inline=False)
         await client.send_message(ctx.message.author, embed=embed)
     await client.say("Teams sent via DM!")
+
+
+@client.command(pass_context=True)
+async def count(ctx):
+    await client.say(len(client.servers))
 
 
 def represents_int(s):
