@@ -32,6 +32,12 @@ HSTR_TEAMS = {
          'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']}
     ],
     'PHASE2': [
+        {'NAME': 'Big Mix + HODA',
+         'TOONS': ['ADMIRALACKBAR', 'HERMITYODA', 'GENERALKENOBI', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3'],
+         'GOAL': 3, 'MIN_GP': 80000},
+        {'NAME': 'Big Mix + Barriss',
+         'TOONS': ['ADMIRALACKBAR', 'BARRISSOFFEE', 'GENERALKENOBI', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3'],
+         'GOAL': 3, 'MIN_GP': 80000},
         {'NAME': 'Pathfinder\'s Training with Leia',
          'TOONS': ['PRINCESSLEIA', 'HERMITYODA', 'SCARIFREBEL', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3'],
          'GOAL': 3, 'MIN_GP': 80000, 'ZETAS': ['Do or Do Not']},
