@@ -243,11 +243,11 @@ def analyze_guild_hstr_readiness(url):
     nb_toons = 0
     for player_name, toons in guild_dict.items():
         for toon_name, toon_data in toons.items():
-            if toon_data['power'] > 15000:
+            if toon_data['power'] > 10000:
                 leftover_gp += toon_data['power']
                 nb_toons += 1
-    msg.append(("Leftover GP for P4 (toons over 15k GP only):", "{:,}".format(leftover_gp)))
-    msg.append(("Number of toons left for P4 (toons over 15k GP only):", "{:,}".format(nb_toons)))
+    msg.append(("Leftover GP for P4 (toons over 10k GP only):", "{:,}".format(leftover_gp)))
+    msg.append(("Number of toons left for P4 (toons over 10k GP only):", "{:,}".format(nb_toons)))
     msg.append((
         "Average:",
         "{:,.2f} GP left for P4 per player ({:,.2f} teams).".format(leftover_gp / 50, (leftover_gp / 50) / 5)))
