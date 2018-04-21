@@ -280,7 +280,7 @@ def create_breakdown(readiness):
         breakdown[k] = {}
         for t in v['teams']:
             if not breakdown[k].get(t['team_name']):
-                breakdown[k][t['team_name']] = {'goal': t['goal'], 'players': []}
+                breakdown[k][t['team_name']] = {'goal': t['goal'], 'comp': t['comp'], 'players': []}
             breakdown[k][t['team_name']]['players'].append(t['player_name'])
     return breakdown
 
