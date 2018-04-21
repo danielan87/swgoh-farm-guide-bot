@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import requests
 import json
 import urllib.request
@@ -225,7 +226,8 @@ def analyze_guild_hstr_readiness(url):
                         max_gp = data['power']
                 if winner:
                     readiness[phase]['remaining'] -= winner['goal']
-                    readiness[phase]['teams'].append({'player_name': player_name, 'team_name': winner['name']})
+                    readiness[phase]['teams'].append(
+                        {'player_name': player_name, 'team_name': winner['name'], 'goal': winner['goal']})
                     for id in winner['IDS']:
                         del guild_dict[player_name][id]
                     if readiness[phase]['remaining'] <= 0:
@@ -268,7 +270,19 @@ def analyze_guild_hstr_readiness(url):
                     team_str = ", ".join(team_str)
                     team['comp'] = team_str
                     break
-    return msg
+    return msg, create_breakdown(readiness)
+
+
+def create_breakdown(readiness):
+    breakdown = {}
+    readiness = OrderedDict(sorted(readiness.items()))
+    for k, v in readiness.items():
+        breakdown[k] = {}
+        for t in v['teams']:
+            if not breakdown[k].get(t['team_name']):
+                breakdown[k][t['team_name']] = {'goal': t['goal'], 'players': []}
+            breakdown[k][t['team_name']]['players'].append(t['player_name'])
+    return breakdown
 
 
 def get_hstr_teams():

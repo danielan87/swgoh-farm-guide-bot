@@ -69,7 +69,8 @@ async def h(ctx):
     embed.add_field(name="?h", value="List all available commands.", inline=False)
     embed.add_field(name="?sithraid",
                     value="Analyze Heroic Sith Raid Readiness for a guild "
-                          "(usage: ?sithraid <swgoh.gg url of the guild>).",
+                          "(usage: ?sithraid <swgoh.gg url of the guild>) optional: Add \"details\" at the end to get "
+                          "assignments.",
                     inline=False)
     embed.add_field(name="?sithraidteams",
                     value="Teams used to analyze your roster for the raid.",
@@ -91,6 +92,9 @@ async def h(ctx):
                     inline=False)
     embed.add_field(name="Recruitment server:",
                     value="https://discord.gg/AhMvsJT",
+                    inline=False)
+    embed.add_field(name="To invite the bot in your own server:",
+                    value="https://discordapp.com/oauth2/authorize?client_id=436693905736466432&permissions=0&scope=bot",
                     inline=False)
 
     await client.say(embed=embed)
@@ -391,8 +395,9 @@ async def analyze_roster(ctx, url):
 
 
 @client.command(pass_context=True)
-async def sithraid(ctx, url):
-    messages = hstr_readiness.analyze_guild_hstr_readiness(url)
+async def sithraid(ctx, url, details=None):
+    details = True if details == 'details' else False
+    messages, breakdown = hstr_readiness.analyze_guild_hstr_readiness(url)
     if not messages:
         await client.say("invalid url")
         return
@@ -407,6 +412,22 @@ async def sithraid(ctx, url):
     for msg in messages:
         embed.add_field(name=msg[0], value=msg[1], inline=False)
     await client.say(embed=embed)
+
+    if details:
+        breakdown = OrderedDict(sorted(breakdown.items()))
+        for phase, teams in breakdown.items():
+            embed = discord.Embed(title="HSTR {} Assignments".format(phase), colour=discord.Colour(0x000000),
+                                  url=url,
+                                  timestamp=datetime.datetime.now())
+            embed.set_author(name="DeathStarRow Bot",
+                             icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+            embed.set_footer(text="DeathStarRow",
+                             icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+            for team_name, v in teams.items():
+                embed.add_field(name="{} (Goal: {}%)".format(team_name, v['goal']), value=", ".join(v['players']),
+                                inline=False)
+            await client.send_message(ctx.message.author, embed=embed)
+        await client.send_message(ctx.message.author, 'Use ?sithraidteams for team compositions')
 
 
 @client.command(pass_context=True)
