@@ -207,7 +207,7 @@ def analyze_guild_hstr_readiness(url):
                             continue
                     for toon in team['TOONS']:
                         if not player_roster.get(toon):
-                            continue
+                            break
                         player_toon = player_roster[toon]
                         power += player_toon['power']
                         IDS.append(toon)
