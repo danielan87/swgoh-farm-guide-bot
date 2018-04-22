@@ -252,7 +252,9 @@ def analyze_guild_hstr_readiness(url):
     msg.append(("Number of toons left for P4 (toons over 10k GP only):", "{:,}".format(nb_toons)))
     msg.append((
         "Average:",
-        "{:,.2f} GP left for P4 per player ({:,.2f} teams).".format(leftover_gp / 50, (leftover_gp / 50) / 5)))
+        "{:,.2f} GP left for P4 per player ({:,.2f} gp per team, toons over 10k GP only).".format(leftover_gp / 50,
+                                                                                                  leftover_gp /
+                                                                                                  nb_toons * 5)))
     msg.append(("Average:",
                 "{:,.2f} toons left for P4 per player ({:,.2f} teams).".format(nb_toons / 50, (nb_toons / 50) / 5)))
 
