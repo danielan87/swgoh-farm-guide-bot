@@ -457,10 +457,9 @@ async def count(ctx):
     if ctx.message.author.display_name != 'JubeiNabeshin' and ctx.message.author.discriminator != '8860':
         await client.say('Unauthorized.')
         return
-    msg = 'Number of servers: {}.'.format(len(client.servers))
+    await client.say('Number of servers: {}.'.format(len(client.servers)))
     for s in list(client.servers):
-        msg += 'Server name: {} / Owner: {}\n'.format(s.name, s.owner)
-    await client.say(msg)
+        await client.say('Server name: {} / Owner: {}\n'.format(s.name, s.owner))
 
 
 def represents_int(s):
