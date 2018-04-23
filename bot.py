@@ -454,7 +454,14 @@ async def sithraidteams(ctx):
 
 @client.command(pass_context=True)
 async def count(ctx):
-    await client.say(len(client.servers))
+    if ctx.message.author.display_name != 'JubeiNabeshin' and ctx.message.author.discriminator != '8860':
+        await client.say('Unauthorized.')
+        return
+    await client.say('Number of servers: {}.'.format(len(client.servers)))
+    msg = ''
+    for s in list(client.servers):
+        msg += 'Server name: {} / Owner: {}\n'.format(s.name, s.owner)
+    await client.say(msg)
 
 
 def represents_int(s):
