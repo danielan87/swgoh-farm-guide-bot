@@ -69,8 +69,8 @@ async def h(ctx):
     embed.add_field(name="?h", value="List all available commands.", inline=False)
     embed.add_field(name="?sithraid",
                     value="Analyze Heroic Sith Raid Readiness for a guild "
-                          "(usage: ?sithraid <swgoh.gg url of the guild>) optional: Add \"details\" at the end to get "
-                          "assignments.",
+                          "(usage: ?sithraid <swgoh.gg url of the guild/player>) optional: "
+                          "Add \"details\" at the end to get assignments.",
                     inline=False)
     embed.add_field(name="?sithraidteams",
                     value="Teams used to analyze your roster for the raid.",
