@@ -183,7 +183,7 @@ def get_guild_id_from_player_url(url):
     pguild = aside[0].xpath('.//p[.//text()="Guild "]')
     guild_url = pguild[0].xpath('.//a/@href')[0]
     guild_id = guild_url.split('/')[2]
-    return guild_id
+    return guild_id, 'https://swgoh.gg{}'.format(guild_url)
 
 
 def analyze_guild_hstr_readiness(url):
@@ -198,9 +198,8 @@ def analyze_guild_hstr_readiness(url):
 
     individual = False
     if pc.match(url):
-        guild_id = get_guild_id_from_player_url(url)
+        guild_id, guild_url = get_guild_id_from_player_url(url)
         individual = url.split('/')[4]
-        guild_url = 'https://swgoh.gg/g/{}/force-is-strong-between-us/'.format(guild_id)
     else:
         guild_id = url.split('/')[4]
         guild_url = url
