@@ -424,7 +424,8 @@ async def sithraid(ctx, url, details=None):
             embed.set_footer(text="DeathStarRow",
                              icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
             for team_name, v in teams.items():
-                embed.add_field(name="{} - {} *(Goal: {}%)*".format(team_name, v['comp'], v['goal']),
+                embed.add_field(name="{} - {} (Goal: {}%) - eligibility: {}".format(team_name, v['comp'], v['goal'],
+                                                                                    v['eligibility']),
                                 value=", ".join(v['players']),
                                 inline=False)
             await client.send_message(ctx.message.author, embed=embed)

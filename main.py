@@ -406,6 +406,7 @@ def create_template_for_spreadsheet(file_path):
                            'Platoon 3', 'Recommended', '', '#', 'Platoon 4', 'Recommended', '', '#', 'Platoon 5',
                            'Recommended', '', '#', 'Platoon 6', 'Recommended', '']
             idx += 1
+    df.to_clipboard()
     return df
 
 

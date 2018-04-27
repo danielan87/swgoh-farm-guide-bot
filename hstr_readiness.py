@@ -4,6 +4,7 @@ import json
 import urllib.request
 import re
 import html
+from lxml import html as lxml_html
 
 HSTR_TEAMS = {
     'PHASE1': [
@@ -126,7 +127,7 @@ def get_characters_media():
     return data
 
 
-def create_guild_dict(data):
+def create_guild_dict(data, player_id=None):
     """
     Returns a dict of type:
     {'player_name': {
@@ -134,16 +135,27 @@ def create_guild_dict(data):
         }
     }
     :param data:
+    :param player_id:
     :return:
     """
     d = {}
+    found = False
+    if player_id:
+        for toon_id, rosters in data.items():
+            if found:
+                break
+            for roster in rosters:
+                if roster.get('url') and player_id in roster['url']:
+                    player_id = roster['player']
+                    break
     for toon_id, rosters in data.items():
         for roster in rosters:
             if roster['rarity'] < 7:
                 continue
-            if roster['player'] not in d.keys():
-                d[roster['player']] = {}
-            d[roster['player']][toon_id] = roster
+            if not player_id or (player_id and player_id in roster['player']):
+                if roster['player'] not in d.keys():
+                    d[roster['player']] = {}
+                d[roster['player']][toon_id] = roster
     return d
 
 
@@ -163,23 +175,42 @@ def get_guild_zetas(url):
     return zetas
 
 
+def get_guild_id_from_player_url(url):
+    page = requests.get(url)
+    player_id = url.split('/')[-2]
+    tree = lxml_html.fromstring(page.content)
+    aside = tree.xpath('//div[contains(@class, "content-container-aside")]')
+    pguild = aside[0].xpath('.//p[.//text()="Guild "]')
+    guild_url = pguild[0].xpath('.//a/@href')[0]
+    guild_id = guild_url.split('/')[2]
+    return guild_id
+
+
 def analyze_guild_hstr_readiness(url):
     """
     :param url: type: https://swgoh.gg/g/861/force-is-strong-between-us/
     :return:
     """
-    p = re.compile('https:\/\/swgoh\.gg\/g\/\d*\/.*')
-    if not p.match(url):
+    pg = re.compile('https:\/\/swgoh\.gg\/g\/\d*\/.*')
+    pc = re.compile('https:\/\/swgoh\.gg\/u\/.*\/')
+    if not pg.match(url) and not pc.match(url):
         return "Invalid url"
 
-    guild_id = url.split('/')[4]
+    individual = False
+    if pc.match(url):
+        guild_id = get_guild_id_from_player_url(url)
+        individual = url.split('/')[4]
+        guild_url = 'https://swgoh.gg/g/{}/force-is-strong-between-us/'.format(guild_id)
+    else:
+        guild_id = url.split('/')[4]
+        guild_url = url
 
     guild_data_url = "https://swgoh.gg/api/guilds/{}/units/".format(guild_id)
     roster_data = requests.get(guild_data_url)
     roster_data = roster_data.json()
 
-    guild_dict = create_guild_dict(roster_data)
-    guild_zetas = get_guild_zetas(url)
+    guild_dict = create_guild_dict(roster_data, individual)
+    guild_zetas = get_guild_zetas(guild_url)
 
     readiness = {}
     for phase, teams in HSTR_TEAMS.items():
@@ -212,7 +243,11 @@ def analyze_guild_hstr_readiness(url):
                         power += player_toon['power']
                         IDS.append(toon)
                     if power > team['MIN_GP']:
-                        temp[team['NAME']] = {'power': power, 'IDS': IDS, 'name': team['NAME'], 'goal': team['GOAL']}
+                        eligibility = "Min GP: {}".format(team['MIN_GP'])
+                        if team.get('ZETAS'):
+                            eligibility += ' / required zetas: {}'.format(", ".join(team['ZETAS']))
+                        temp[team['NAME']] = {'power': power, 'IDS': IDS, 'name': team['NAME'], 'goal': team['GOAL'],
+                                              'eligibility': eligibility}
                 max_gp = 0
                 goal = 0
                 winner = None
@@ -227,7 +262,8 @@ def analyze_guild_hstr_readiness(url):
                 if winner:
                     readiness[phase]['remaining'] -= winner['goal']
                     readiness[phase]['teams'].append(
-                        {'player_name': player_name, 'team_name': winner['name'], 'goal': winner['goal']})
+                        {'player_name': player_name, 'team_name': winner['name'], 'goal': winner['goal'],
+                         'eligibility': winner['eligibility']})
                     for id in winner['IDS']:
                         del guild_dict[player_name][id]
                     if readiness[phase]['remaining'] <= 0:
@@ -239,7 +275,10 @@ def analyze_guild_hstr_readiness(url):
 
     msg = []
     for k in sorted(readiness.keys()):
-        msg.append((k, "{}% ready.".format(100 - readiness[k]['remaining'])))
+        rem = readiness[k]['remaining']
+        if k == 'PHASE4_WITH_DN' and readiness[k]['remaining'] > 0:
+            rem = rem + 5
+        msg.append((k, "{}% ready.".format(100 - rem)))
 
     leftover_gp = 0
     nb_toons = 0
@@ -282,7 +321,8 @@ def create_breakdown(readiness):
         breakdown[k] = {}
         for t in v['teams']:
             if not breakdown[k].get(t['team_name']):
-                breakdown[k][t['team_name']] = {'goal': t['goal'], 'comp': t['comp'], 'players': []}
+                breakdown[k][t['team_name']] = {'goal': t['goal'], 'comp': t['comp'], 'eligibility': t['eligibility'],
+                                                'players': []}
             breakdown[k][t['team_name']]['players'].append(t['player_name'])
     return breakdown
 
