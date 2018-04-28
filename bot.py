@@ -399,7 +399,7 @@ async def analyze_roster(ctx, url):
 
 @client.command(pass_context=True)
 async def sithraid(ctx, url, details=None):
-    log("{} asked for ?sithraid {} {}".format(str(ctx.message.author)), url, details)
+    log("{} asked for ?sithraid {} {}".format(str(ctx.message.author)), url, details if details else '')
     details = True if details == 'details' else False
     messages, breakdown = hstr_readiness.analyze_guild_hstr_readiness(url)
     if not messages:
