@@ -35,6 +35,7 @@ async def on_ready():
     print("Bot online!")
     print("Name: {}".format(client.user.name))
     print("ID: {}".format(client.user.id))
+    log("Bot online")
     await client.change_presence(game=discord.Game(name='?h for help'))
 
 
@@ -46,6 +47,7 @@ async def ping(ctx):
     :return:
     """
     print("{} pinged!".format(str(ctx.message.author)))
+    log("{} pinged!".format(str(ctx.message.author)))
     await client.say("Pong!")
 
 
@@ -57,6 +59,7 @@ async def h(ctx):
     :return:
     """
     print("{} asked for the command list!".format(str(ctx.message.author)))
+    log("{} asked for h".format(str(ctx.message.author)))
     embed = discord.Embed(title="List of Commands", colour=discord.Colour(0x000000),
                           timestamp=datetime.datetime.now())
 
@@ -396,6 +399,7 @@ async def analyze_roster(ctx, url):
 
 @client.command(pass_context=True)
 async def sithraid(ctx, url, details=None):
+    log("{} asked for ?sithraid {} {}".format(str(ctx.message.author)), url, details)
     details = True if details == 'details' else False
     messages, breakdown = hstr_readiness.analyze_guild_hstr_readiness(url)
     if not messages:
@@ -434,6 +438,7 @@ async def sithraid(ctx, url, details=None):
 
 @client.command(pass_context=True)
 async def sithraidteams(ctx):
+    log("{} asked for sithraidteams".format(str(ctx.message.author)))
     messages = hstr_readiness.get_hstr_teams()
     if not messages:
         await client.say("Error retrieving the hstr teams.")
@@ -469,6 +474,18 @@ def represents_int(s):
         return True
     except ValueError:
         return False
+
+
+def log(msg):
+    filename = "logs/bot-{:%Y%m%d}.log".format(datetime.date.today())
+    if os.path.exists(filename):
+        append_write = 'a'  # append if already exists
+    else:
+        append_write = 'w'  # make a new file if not
+
+    f = open(filename, append_write)
+    f.write(msg + '\n')
+    f.close()
 
 
 client.run(BOT_TOKEN)
