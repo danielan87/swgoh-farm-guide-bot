@@ -479,9 +479,9 @@ def add_rotation(channel_id, players):
     tomorrow = '{:%m/%d/%y}: '.format(datetime.datetime.today() + datetime.timedelta(days=1))
     i = 1
     j = 1
-    for k, values in rot.items():
-        tom_vals = values[1:] + [values[0]]
-        for v in values:
+    for key in sorted(rot.iterkeys()):
+        tom_vals = rot[key][1:] + [rot[key][0]]
+        for v in rot[key]:
             example += '{}) {}, '.format(i, v)
             i += 1
         for v in tom_vals:
@@ -511,9 +511,8 @@ def get_rotation(channel_id):
         rot = json.load(f)
     i = 1
     text = "{}: ".format(today)
-    new_json = {}
-    for k, vals in rot.items():
-        for v in vals:
+    for key in sorted(rot.iterkeys()):
+        for v in rot[key]:
             text += "{}) {}, ".format(i, v)
             i += 1
     text = text[:-2]

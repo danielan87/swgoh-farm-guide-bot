@@ -30,9 +30,9 @@ async def speak(interval):
                 i = 1
                 text = "{}: ".format(today)
                 new_json = {}
-                for k, vals in rot.items():
-                    new_rot = vals[1:] + [vals[0]]
-                    new_json[k] = new_rot
+                for key in sorted(rot.iterkeys()):
+                    new_rot = rot[key][1:] + [rot[key][0]]
+                    new_json[key] = new_rot
 
                     for v in new_rot:
                         text += "{}) {}, ".format(i, v)
