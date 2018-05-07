@@ -454,6 +454,42 @@ def analyze_roster(url):
         global_data[k]['icon'] = icon
     return global_data
 
+
+def add_rotation(channel_id, players):
+    if os.path.exists('rotations/{}'.format(channel_id)):
+        with open(r'rotations/{}'.format(channel_id)) as f:
+            rot = json.load(f)
+            max_keys = max([int(k) for k in rot.keys()])
+            rot[max_keys + 1] = players
+    else:
+        rot = dict()
+        rot[1] = players
+    with open(r'rotations/{}'.format(channel_id), 'w') as outfile:
+        json.dump(rot, outfile)
+
+    example = '{:%m/%d/%y}: '.format(datetime.datetime.today())
+    tomorrow = '{:%m/%d/%y}: '.format(datetime.datetime.today() + datetime.timedelta(days=1))
+    i = 1
+    j = 1
+    for k, values in rot.items():
+        tom_vals = values[1:] + [values[0]]
+        for v in values:
+            example += '{}) {}, '.format(i, v)
+            i += 1
+        for v in tom_vals:
+            tomorrow += '{}) {}, '.format(j, v)
+            j += 1
+    return example[:-2], tomorrow[:-2]
+
+
+def del_rotation(channel_id):
+    try:
+        os.remove(r'rotations/{}'.format(channel_id))
+    except:
+        return False
+    return True
+
+
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))
 #     toons_df = create_toons_df(formula=True)

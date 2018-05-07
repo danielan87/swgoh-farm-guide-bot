@@ -468,6 +468,21 @@ async def count(ctx):
         await client.say('Server name: {} / Owner: {}\n'.format(s.name, s.owner))
 
 
+@client.command(pass_context=True)
+async def add_rotation(ctx, *args):
+    today, tomorrow = main.add_rotation(ctx.message.channel.id, list(args))
+    await client.say('Rotation added! Current rotation: {}.'.format(today))
+    await client.say('Tomorrow\'s rotation: {}.'.format(tomorrow))
+
+
+@client.command(pass_context=True)
+async def del_rotation(ctx):
+    if main.del_rotation(ctx.message.channel.id):
+        await client.say('Rotation removed!')
+    else:
+        await client.say('No rotation found.')
+
+
 def represents_int(s):
     try:
         int(s)
