@@ -9,7 +9,7 @@ import datetime
 client = discord.Client()
 
 
-INTERVAL = '30 0 * * *'
+INTERVAL = '* * * * *'
 channel_list_file = r'rotations/master_channel_list.txt'
 
 
