@@ -9,7 +9,7 @@ import datetime
 client = discord.Client()
 
 
-INTERVAL = '30 0 * * *'
+INTERVAL = '49 0 * * *'
 channel_list_file = r'rotations/master_channel_list.txt'
 
 
@@ -46,8 +46,9 @@ async def speak(interval):
 
                 print('Scheduling {} with schedule {}'.format(text, INTERVAL))
                 await client.send_message(channel, text)
-        except:
-            print('I could not send {} to {} :('.format(text, channel))
+        except Exception as e:
+            print('I could not send rotations :(')
+            print(e)
 
 
 @client.event
