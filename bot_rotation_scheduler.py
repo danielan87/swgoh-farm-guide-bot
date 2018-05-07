@@ -59,7 +59,8 @@ async def on_ready():
             traceback.format_exc()
 
 
-try:
-    client.run(os.environ['DISCORD_CRON_USER'], os.environ['DISCORD_CRON_PASS'])
-except KeyError:
-    client.run(BOT_TOKEN)
+client.run(BOT_TOKEN)
+# try:
+#     client.run(os.environ['DISCORD_CRON_USER'], os.environ['DISCORD_CRON_PASS'])
+# except KeyError:
+#     client.run(BOT_TOKEN)
