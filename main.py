@@ -462,6 +462,14 @@ def add_rotation(channel_id, players):
             max_keys = max([int(k) for k in rot.keys()])
             rot[max_keys + 1] = players
     else:
+        with open('rotations/master_channel_list.txt') as f:
+            file = f.read()
+        if file:
+            new_line = '\n{}'.format(channel_id)
+        else:
+            new_line = channel_id
+        with open("rotations/master_channel_list.txt", "a") as f:
+            f.write(new_line)
         rot = dict()
         rot[1] = players
     with open(r'rotations/{}'.format(channel_id), 'w') as outfile:
@@ -484,10 +492,32 @@ def add_rotation(channel_id, players):
 
 def del_rotation(channel_id):
     try:
+        with open('rotations/master_channel_list.txt') as f:
+            file = f.read()
+        file = file.replace(channel_id, '').replace('\n\n', '\n')
+        if file[-2:] == '\n':
+            file = file[:-2]
+        with open('rotations/master_channel_list.txt', "w") as f:
+            f.write(file)
         os.remove(r'rotations/{}'.format(channel_id))
     except:
         return False
     return True
+
+
+def get_rotation(channel_id):
+    today = datetime.datetime.today().strftime('%m/%d/%y')
+    with open(r'rotations/{}'.format(channel_id)) as f:
+        rot = json.load(f)
+    i = 1
+    text = "{}: ".format(today)
+    new_json = {}
+    for k, vals in rot.items():
+        for v in vals:
+            text += "{}) {}, ".format(i, v)
+            i += 1
+    text = text[:-2]
+    return text
 
 
 # if __name__ == '__main__':

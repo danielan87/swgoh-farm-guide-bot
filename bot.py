@@ -483,6 +483,11 @@ async def del_rotation(ctx):
         await client.say('No rotation found.')
 
 
+@client.command(pass_context=True)
+async def rotation(ctx):
+    await client.say(main.get_rotation(ctx.message.channel.id))
+
+
 def represents_int(s):
     try:
         int(s)
