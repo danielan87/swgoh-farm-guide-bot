@@ -44,10 +44,10 @@ async def speak(interval):
                 channel = client.get_channel(channel.strip())
                 text = text.strip()
 
-                print(f'Scheduling `{text}` with schedule `{INTERVAL.strip()}`')
+                print('Scheduling {} with schedule {}'.format(text, INTERVAL))
                 await client.send_message(channel, text)
         except:
-            print(f'I could not send `{text}` to `{channel}` :(')
+            print('I could not send {} to {} :('.format(text, channel))
 
 
 @client.event
