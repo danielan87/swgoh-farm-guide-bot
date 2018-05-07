@@ -30,7 +30,7 @@ async def speak(interval):
                 i = 1
                 text = "{}: ".format(today)
                 new_json = {}
-                for key in sorted(rot.iterkeys()):
+                for key in sorted(rot.keys()):
                     new_rot = rot[key][1:] + [rot[key][0]]
                     new_json[key] = new_rot
 
