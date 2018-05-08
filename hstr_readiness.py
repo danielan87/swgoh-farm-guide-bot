@@ -6,8 +6,8 @@ import re
 import html
 from lxml import html as lxml_html
 
-HSTR_TEAMS = {
-    'PHASE1': [
+HSTR_TEAMS = OrderedDict([
+    ('PHASE1', [
         {'NAME': 'JTR 1', 'TOONS': ['REYJEDITRAINING', 'BB8', 'RESISTANCETROOPER', 'REY', 'VISASMARR'],
          'GOAL': 4, 'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 3', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'VISASMARR'], 'GOAL': 4,
@@ -18,8 +18,8 @@ HSTR_TEAMS = {
          'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']},
         {'NAME': 'JTR 5', 'TOONS': ['REYJEDITRAINING', 'BB8', 'R2D2_LEGENDARY', 'REY', 'HERMITYODA'], 'GOAL': 4,
          'MIN_GP': 80000, 'ZETAS': ['Inspirational Presence']}
-    ],
-    'PHASE3': [
+    ]),
+    ('PHASE3', [
         {'NAME': 'Chex Mix with Pao and Chirrut',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'PAO', 'CHIRRUTIMWE'],
          'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']},
@@ -32,8 +32,8 @@ HSTR_TEAMS = {
         {'NAME': 'Chex Mix with JKA and Rex',
          'TOONS': ['COMMANDERLUKESKYWALKER', 'HANSOLO', 'DEATHTROOPER', 'ANAKINKNIGHT', 'CT7567'],
          'GOAL': 4, 'MIN_GP': 75000, 'ZETAS': ['Shoots First']}
-    ],
-    'PHASE2': [
+    ]),
+    ('PHASE2', [
         {'NAME': 'Big Mix + HODA',
          'TOONS': ['ADMIRALACKBAR', 'HERMITYODA', 'GENERALKENOBI', 'GRANDADMIRALTHRAWN', 'SABINEWRENS3'],
          'GOAL': 3, 'MIN_GP': 80000},
@@ -96,8 +96,8 @@ HSTR_TEAMS = {
         {'NAME': 'Thrawnpers without DT',
          'TOONS': ['GRANDADMIRALTHRAWN', 'VEERS', 'COLONELSTARCK', 'SHORETROOPER', 'SNOWTROOPER'],
          'GOAL': 0.5, 'MIN_GP': 80000, 'ZETAS': ['Aggressive Tactician']},
-    ],
-    'PHASE4_WITH_DN': [
+    ]),
+    ('PHASE4_WITH_DN', [
         {'NAME': 'Nightsisters with MT and Zombie 1',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'TALIA', 'NIGHTSISTERZOMBIE', 'MOTHERTALZIN'], 'GOAL': 15,
          'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
@@ -113,8 +113,8 @@ HSTR_TEAMS = {
         {'NAME': 'Nightsisters',
          'TOONS': ['ASAJVENTRESS', 'DAKA', 'TALIA', 'NIGHTSISTERACOLYTE', 'NIGHTSISTERINITIATE'], 'GOAL': 5,
          'MIN_GP': 80000, 'ZETAS': ['Nightsister Swiftness']},
-    ]
-}
+    ])]
+)
 
 
 def get_characters_media():
