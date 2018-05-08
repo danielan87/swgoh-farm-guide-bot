@@ -4,3 +4,5 @@ images/*
 images
 /settings.py
 *.log
+/rotations/master_channel_list.txt
+/rotations/
