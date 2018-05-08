@@ -473,6 +473,7 @@ async def add_rotation(ctx, *args):
     today, tomorrow = main.add_rotation(ctx.message.channel.id, list(args))
     await client.say('Rotation added! Current rotation: {}.'.format(today))
     await client.say('Tomorrow\'s rotation: {}.'.format(tomorrow))
+    # (datetime.datetime.now().hour - 23) % 24
 
 
 @client.command(pass_context=True)

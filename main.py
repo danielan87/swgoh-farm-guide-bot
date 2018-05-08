@@ -464,7 +464,7 @@ def add_rotation(channel_id, players):
     else:
         with open('rotations/master_channel_list.txt') as f:
             file = f.read()
-        if file:
+        if file.strip():
             new_line = '\n{}'.format(channel_id)
         else:
             new_line = channel_id
@@ -497,6 +497,8 @@ def del_rotation(channel_id):
         file = file.replace(channel_id, '').replace('\n\n', '\n')
         if file[-2:] == '\n':
             file = file[:-2]
+        if file[:2] == '\n':
+            file = file[2:]
         with open('rotations/master_channel_list.txt', "w") as f:
             f.write(file)
         os.remove(r'rotations/{}'.format(channel_id))
