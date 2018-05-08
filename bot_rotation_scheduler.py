@@ -24,6 +24,8 @@ async def speak(interval):
             content = [x.strip() for x in content]
             today = datetime.datetime.today().strftime('%m/%d/%y')
             for c in content:
+                if not c.strip():
+                    continue
                 channel = c
                 with open(r'rotations/{}'.format(channel)) as f:
                     rot = json.load(f)
