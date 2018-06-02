@@ -194,8 +194,8 @@ def analyze_guild_hstr_readiness(url):
     :param url: type: https://swgoh.gg/g/861/force-is-strong-between-us/
     :return:
     """
-    pg = re.compile('https:\/\/swgoh\.gg\/g\/\d*\/.*')
-    pc = re.compile('https:\/\/swgoh\.gg\/u\/.*\/')
+    pg = re.compile('https:\/\/swgoh\.gg\/g\/\d*\/.*[\/]?')
+    pc = re.compile('https:\/\/swgoh\.gg\/u\/.*[\/]?')
     if not pg.match(url) and not pc.match(url):
         return "Invalid url"
 
