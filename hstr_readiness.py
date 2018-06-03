@@ -199,6 +199,7 @@ def analyze_guild_hstr_readiness(url):
     if not pg.match(url) and not pc.match(url):
         return "Invalid url"
 
+    url = url.lower()
     individual = False
     if pc.match(url):
         guild_id, guild_url = get_guild_id_from_player_url(url)
