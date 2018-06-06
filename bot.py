@@ -78,17 +78,31 @@ async def h(ctx):
     embed.add_field(name="?sithraidteams",
                     value="Teams used to analyze your roster for the raid.",
                     inline=False)
+    embed.add_field(name="?add_rotation",
+                    value="Bind a rotation to a channel. Usage: `?add_rotation player1 player2 player3 ...`. "
+                          "New rotation will be sent everyday at 12:30am EDT. Possible to add a second rotation "
+                          "behind.",
+                    inline=False)
+    embed.add_field(name="?del_rotation",
+                    value="Remove rotation bound to the current channel.",
+                    inline=False)
+    embed.add_field(name="?rotation",
+                    value="Prints the current channel's rotation.",
+                    inline=False)
     embed.add_field(name="For more help or suggestions:",
                     value="Contact JubeiNabeshin#8860",
                     inline=False)
     embed.add_field(name="About DSR:",
-                    value="DeathStarRow is an alliance of 3 guilds, from 100m to 150m GP. 2 guilds have HSTR on farm!",
+                    value="DeathStarRow is an alliance of 4 guilds, from 100m to 150m GP. 2 guilds have HSTR on farm!",
                     inline=False)
     embed.add_field(name="SWA:",
                     value="https://swgoh.gg/g/646/deathstarrow-swa/",
                     inline=False)
     embed.add_field(name="J&J:",
                     value="https://swgoh.gg/g/861/force-is-strong-between-us/",
+                    inline=False)
+    embed.add_field(name="O.D.B.:",
+                    value="https://swgoh.gg/g/10294/deathstarrow-odb/",
                     inline=False)
     embed.add_field(name="SOK:",
                     value="https://swgoh.gg/g/27003/deathstarrow-sok/",

@@ -369,7 +369,7 @@ def convert_to_media_name(platoon_list, toons_media, ships_media):
     return platoon_list
 
 
-def create_template_for_spreadsheet(file_path):
+def create_template_for_spreadsheet(file_path, result_path):
     platoons = analyze_platoon_json(get_platoons_from_rpc(file_path))
     toons_media = get_characters_media()
     ships_media = get_ships_media()
@@ -406,7 +406,7 @@ def create_template_for_spreadsheet(file_path):
                            'Platoon 3', 'Recommended', '', '#', 'Platoon 4', 'Recommended', '', '#', 'Platoon 5',
                            'Recommended', '', '#', 'Platoon 6', 'Recommended', '']
             idx += 1
-    df.to_clipboard()
+    df.to_csv(result_path)
     return df
 
 
