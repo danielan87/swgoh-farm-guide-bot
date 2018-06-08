@@ -5,7 +5,7 @@ import urllib.request
 import json
 from string import ascii_uppercase
 import xlwt
-import requests
+import re
 from requests.exceptions import *
 import datetime
 import swgoh_leader_tool.swgoh_leader_tool as tool
@@ -464,10 +464,9 @@ def add_rotation(channel_id, players):
     else:
         with open('rotations/master_channel_list.txt') as f:
             file = f.read()
+        new_line = '{};0030'.format(channel_id)
         if file.strip():
-            new_line = '\n{}'.format(channel_id)
-        else:
-            new_line = channel_id
+            new_line = '\n{}'.format(new_line)
         with open("rotations/master_channel_list.txt", "a") as f:
             f.write(new_line)
         rot = dict()
@@ -494,7 +493,8 @@ def del_rotation(channel_id):
     try:
         with open('rotations/master_channel_list.txt') as f:
             file = f.read()
-        file = file.replace(channel_id, '').replace('\n\n', '\n')
+        file = re.sub('{};\d{4}'.format(channel_id), '', file)
+        file = file.replace('\n\n', '\n')
         if file[-2:] == '\n':
             file = file[:-2]
         if file[:2] == '\n':
@@ -523,6 +523,45 @@ def get_rotation(channel_id):
     except:
         return "No rotation found for this channel."
 
+
+def rotate(channel_id):
+    today = datetime.datetime.today().strftime('%m/%d/%y')
+    with open(r'rotations/{}'.format(channel_id)) as f:
+        rot = json.load(f)
+    i = 1
+    text = "{}: ".format(today)
+    new_json = {}
+    for key in sorted(rot.keys()):
+        new_rot = rot[key][1:] + [rot[key][0]]
+        new_json[key] = new_rot
+
+        for v in new_rot:
+            text += "{}) {}, ".format(i, v)
+            i += 1
+    text = text[:-2]
+    with open(r'rotations/{}'.format(channel_id), 'w') as outfile:
+        json.dump(new_json, outfile)
+
+    return text.strip()
+
+
+def set_rotation_time(channel_id, hour):
+    with open(r'rotations/master_channel_list.txt') as f:
+        channels = f.readlines()
+    channels = [c.strip() for c in channels if c.strip()]
+    found = False
+    for i, c in enumerate(channels):
+        s = c.split(';')
+        if s[0] == channel_id:
+            channels[i] = "{};{}".format(s[0], hour)
+            found = True
+            break
+    if not found:
+        return "This channel doesn't have any rotation set."
+
+    with open(r'rotations/master_channel_list.txt', 'w') as outfile:
+        outfile.write("\n".join(channels))
+    return "Time changed to {} EST!".format(hour)
 
 # if __name__ == '__main__':
 #     writer = ExcelWriter(os.path.join(os.getcwd(), 'farm_guide.xls'))

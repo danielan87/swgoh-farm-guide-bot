@@ -80,7 +80,7 @@ async def h(ctx):
                     inline=False)
     embed.add_field(name="?add_rotation",
                     value="Bind a rotation to a channel. Usage: `?add_rotation player1 player2 player3 ...`. "
-                          "New rotation will be sent everyday at 12:30am EDT. Possible to add a second rotation "
+                          "New rotation will be sent everyday at 12:30am EST. Possible to add a second rotation "
                           "behind.",
                     inline=False)
     embed.add_field(name="?del_rotation",
@@ -88,6 +88,13 @@ async def h(ctx):
                     inline=False)
     embed.add_field(name="?rotation",
                     value="Prints the current channel's rotation.",
+                    inline=False)
+    embed.add_field(name="?rotate",
+                    value="Force a rotation.",
+                    inline=False)
+    embed.add_field(name="?set_rotation_time",
+                    value="Change the rotation time. example: `?set_rotation_time 1959` will give the rotation "
+                          "everyday at 19:59 EST.",
                     inline=False)
     embed.add_field(name="For more help or suggestions:",
                     value="Contact JubeiNabeshin#8860",
@@ -487,7 +494,6 @@ async def add_rotation(ctx, *args):
     today, tomorrow = main.add_rotation(ctx.message.channel.id, list(args))
     await client.say('Rotation added! Current rotation: {}.'.format(today))
     await client.say('Tomorrow\'s rotation: {}.'.format(tomorrow))
-    # (datetime.datetime.now().hour - 23) % 24
 
 
 @client.command(pass_context=True)
@@ -501,6 +507,25 @@ async def del_rotation(ctx):
 @client.command(pass_context=True)
 async def rotation(ctx):
     await client.say(main.get_rotation(ctx.message.channel.id))
+
+
+@client.command(pass_context=True)
+async def rotate(ctx):
+    await client.say(main.rotate(ctx.message.channel.id))
+
+
+@client.command(pass_context=True)
+async def set_rotation_time(ctx, *args):
+    t = list(args)
+    if len(t) != 1:
+        await client.say('Too many arguments. Give an hour in a 4 digit format. Example: `0030`')
+        return
+    t = args[0]
+    if not re.search(r'\d{4}', t):
+        await client.say('Bad format. Give an hour in a 4 digit format. Example: `0030`')
+        return
+
+    await client.say(main.set_rotation_time(ctx.message.channel.id, t))
 
 
 def represents_int(s):
