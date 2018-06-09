@@ -53,6 +53,8 @@ async def speak(interval):
                     json.dump(new_json, outfile)
 
                 channel = client.get_channel(channel.strip())
+                if not channel:
+                    raise ValueError('Error with channel {}: Not found'.format(channel))
                 text = text.strip()
 
                 print('Scheduling {} with schedule {}'.format(text, INTERVAL))
