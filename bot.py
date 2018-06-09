@@ -10,6 +10,7 @@ import os
 import datetime
 from settings import BOT_TOKEN
 import matplotlib
+import math
 
 matplotlib.rc('axes.formatter', useoffset=False)
 matplotlib.use('Agg')
@@ -24,6 +25,8 @@ Client = discord.Client()
 bot_prefix = "?"
 client = Bot(command_prefix=bot_prefix)
 client.remove_command("help")
+
+MAX_HSTR_TEAMS_PER_EMBED = 28
 
 
 @client.event
@@ -106,7 +109,7 @@ async def h(ctx):
                     value="https://swgoh.gg/g/646/deathstarrow-swa/",
                     inline=False)
     embed.add_field(name="J&J:",
-                    value="https://swgoh.gg/g/861/force-is-strong-between-us/",
+                    value="https://swgoh.gg/g/861/deathstarrow-jj/",
                     inline=False)
     embed.add_field(name="O.D.B.:",
                     value="https://swgoh.gg/g/10294/deathstarrow-odb/",
@@ -441,19 +444,37 @@ async def sithraid(ctx, url, details=None):
     if details:
         breakdown = OrderedDict(sorted(breakdown.items()))
         for phase, teams in breakdown.items():
-            embed = discord.Embed(title="HSTR {} Assignments".format(phase), colour=discord.Colour(0x000000),
-                                  url=url,
-                                  timestamp=datetime.datetime.now())
-            embed.set_author(name="DeathStarRow Bot",
-                             icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
-            embed.set_footer(text="DeathStarRow",
-                             icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
-            for team_name, v in teams.items():
-                embed.add_field(name="{} - {} (Goal: {}%) - eligibility: {}".format(team_name, v['comp'], v['goal'],
-                                                                                    v['eligibility']),
-                                value=", ".join(v['players']),
-                                inline=False)
-            await client.send_message(ctx.message.author, embed=embed)
+            if len(teams) < MAX_HSTR_TEAMS_PER_EMBED:
+                embed = discord.Embed(title="HSTR {} Assignments".format(phase), colour=discord.Colour(0x000000),
+                                      url=url,
+                                      timestamp=datetime.datetime.now())
+                embed.set_author(name="DeathStarRow Bot",
+                                 icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+                embed.set_footer(text="DeathStarRow",
+                                 icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+                for team_name, v in teams.items():
+                    embed.add_field(name="{} - {} (Goal: {}%) - eligibility: {}".format(team_name, v['comp'], v['goal'],
+                                                                                        v['eligibility']),
+                                    value=", ".join(v['players']),
+                                    inline=False)
+                await client.send_message(ctx.message.author, embed=embed)
+            else:
+                nb = math.ceil(len(teams) / MAX_HSTR_TEAMS_PER_EMBED)
+                for i in range(1, nb + 1):
+                    embed = discord.Embed(title="HSTR {} Assignments ({}/{})".format(phase, i, nb), colour=discord.Colour(0x000000),
+                                          url=url,
+                                          timestamp=datetime.datetime.now())
+                    embed.set_author(name="DeathStarRow Bot",
+                                     icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+                    embed.set_footer(text="DeathStarRow",
+                                     icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+                    for team_name, v in list(teams.items())[(i - 1) * MAX_HSTR_TEAMS_PER_EMBED:i * MAX_HSTR_TEAMS_PER_EMBED if i * MAX_HSTR_TEAMS_PER_EMBED < len(teams) else len(teams)]:
+                        embed.add_field(
+                            name="{} - {} (Goal: {}%) - eligibility: {}".format(team_name, v['comp'], v['goal'],
+                                                                                v['eligibility']),
+                            value=", ".join(v['players']),
+                            inline=False)
+                    await client.send_message(ctx.message.author, embed=embed)
         await client.send_message(ctx.message.author, 'Use ?sithraidteams for other eligible team compositions')
 
 
@@ -467,15 +488,29 @@ async def sithraidteams(ctx):
 
     messages = OrderedDict(sorted(messages.items()))
     for phase, teams in messages.items():
-        embed = discord.Embed(title="HSTR Teams for {}".format(phase), colour=discord.Colour(0x000000),
-                              timestamp=datetime.datetime.now())
-        embed.set_author(name="DeathStarRow Bot",
-                         icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
-        embed.set_footer(text="DeathStarRow",
-                         icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
-        for name, msg in teams.items():
-            embed.add_field(name=name, value=msg, inline=False)
-        await client.send_message(ctx.message.author, embed=embed)
+        if len(teams) < MAX_HSTR_TEAMS_PER_EMBED:
+            embed = discord.Embed(title="HSTR Teams for {}".format(phase), colour=discord.Colour(0x000000),
+                                  timestamp=datetime.datetime.now())
+            embed.set_author(name="DeathStarRow Bot",
+                             icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+            embed.set_footer(text="DeathStarRow",
+                             icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+            for name, msg in teams.items():
+                embed.add_field(name=name, value=msg, inline=False)
+            await client.send_message(ctx.message.author, embed=embed)
+        else:
+            nb = math.ceil(len(teams) / MAX_HSTR_TEAMS_PER_EMBED)
+            for i in range(1, nb + 1):
+                embed = discord.Embed(title="HSTR Teams for {} ({}/{})".format(phase, i, nb),
+                                      colour=discord.Colour(0x000000),
+                                      timestamp=datetime.datetime.now())
+                embed.set_author(name="DeathStarRow Bot",
+                                 icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+                embed.set_footer(text="DeathStarRow",
+                                 icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
+                for name, msg in list(teams.items())[(i - 1) * MAX_HSTR_TEAMS_PER_EMBED:i * MAX_HSTR_TEAMS_PER_EMBED if i * MAX_HSTR_TEAMS_PER_EMBED < len(teams) else len(teams)]:
+                    embed.add_field(name=name, value=msg, inline=False)
+                await client.send_message(ctx.message.author, embed=embed)
     await client.say("Teams sent via DM!")
 
 
