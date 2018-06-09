@@ -60,7 +60,7 @@ async def speak(interval):
                     print('Scheduling {} with schedule {}'.format(text, INTERVAL))
                     await client.send_message(channel, text)
 
-                    to_rotate = [t.strip() for t in to_rotate if t != c]
+                    to_rotate = [t.strip() for t in to_rotate if c not in t]
                     with open(r'rotations/broadcast.txt', 'w') as outfile:
                         outfile.write("\n".join(to_rotate))
                 except Exception as e:
