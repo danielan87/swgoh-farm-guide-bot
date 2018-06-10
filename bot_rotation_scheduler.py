@@ -26,7 +26,7 @@ async def speak(interval):
             hour = today.strftime('%H%M')
             to_rotate = [c[0].strip() for c in content if c[1] == hour]
             with open(r'rotations/broadcast.txt', 'a') as outfile:
-                outfile.write("\n".join(to_rotate))
+                outfile.write("\n" + "\n".join(to_rotate))
             with open(r'rotations/broadcast.txt') as f:
                 to_rotate = set(f.readlines())
 
