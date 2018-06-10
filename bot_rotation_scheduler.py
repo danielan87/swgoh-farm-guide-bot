@@ -6,7 +6,7 @@ from crontab import CronTab
 from settings import BOT_TOKEN
 import datetime
 client = discord.Client()
-
+import os
 
 INTERVAL = '* * * * *'
 channel_list_file = r'rotations/master_channel_list.txt'
@@ -25,13 +25,8 @@ async def speak(interval):
             today_str = today.strftime('%m/%d/%y')
             hour = today.strftime('%H%M')
             to_rotate = [c[0].strip() for c in content if c[1] == hour]
-            with open(r'rotations/broadcast.txt', 'a') as outfile:
-                outfile.write("\n" + "\n".join(to_rotate))
-            with open(r'rotations/broadcast.txt') as f:
-                to_rotate = set(f.readlines())
 
-            rot_loop = to_rotate.copy()
-            for c in rot_loop:
+            for c in os.listdir(r'rotations/broadcast'):
                 try:
                     if not c.strip():
                         continue
@@ -60,9 +55,7 @@ async def speak(interval):
                     print('Scheduling {} with schedule {}'.format(text, INTERVAL))
                     await client.send_message(channel, text)
 
-                    to_rotate = [t.strip() for t in to_rotate if c not in t]
-                    with open(r'rotations/broadcast.txt', 'w') as outfile:
-                        outfile.write("\n".join(to_rotate))
+                    os.remove(r'rotations/broadcast/{}'.format(c))
                 except Exception as e:
                     print('I could not send rotations for channel {} :('.format(channel))
                     print(e)
