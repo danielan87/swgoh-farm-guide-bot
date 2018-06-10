@@ -26,6 +26,9 @@ async def speak(interval):
             hour = today.strftime('%H%M')
             to_rotate = [c[0].strip() for c in content if c[1] == hour]
 
+            for t in to_rotate:
+                open(r'rotations/broadcast/{}'.format(t), 'a').close()
+
             for c in os.listdir(r'rotations/broadcast'):
                 try:
                     if not c.strip():
