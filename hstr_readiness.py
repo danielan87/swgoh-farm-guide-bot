@@ -234,31 +234,36 @@ def get_guild_id_from_player_url(url):
     return guild_id, 'https://swgoh.gg{}'.format(guild_url)
 
 
-def analyze_guild_hstr_readiness(url):
+def analyze_guild_hstr_readiness(urls):
     """
     :param url: type: https://swgoh.gg/g/861/force-is-strong-between-us/
     :return:
     """
     pg = re.compile('https:\/\/swgoh\.gg\/g\/\d*\/.*[\/]?')
     pc = re.compile('https:\/\/swgoh\.gg\/u\/.*[\/]?')
-    if not pg.match(url) and not pc.match(url):
-        return "Invalid url"
+    global_dict = {}
+    global_zetas = {}
+    for url in urls:
+        if not pg.match(url) and not pc.match(url):
+            return "url {} is invalid.".format(url)
 
-    url = url.lower()
-    individual = False
-    if pc.match(url):
-        guild_id, guild_url = get_guild_id_from_player_url(url)
-        individual = url.split('/')[4]
-    else:
-        guild_id = url.split('/')[4]
-        guild_url = url
+        url = url.lower()
+        individual = False
+        if pc.match(url):
+            guild_id, guild_url = get_guild_id_from_player_url(url)
+            individual = url.split('/')[4]
+        else:
+            guild_id = url.split('/')[4]
+            guild_url = url
 
-    guild_data_url = "https://swgoh.gg/api/guilds/{}/units/".format(guild_id)
-    roster_data = requests.get(guild_data_url)
-    roster_data = roster_data.json()
+        guild_data_url = "https://swgoh.gg/api/guilds/{}/units/".format(guild_id)
+        roster_data = requests.get(guild_data_url)
+        roster_data = roster_data.json()
 
-    guild_dict = create_guild_dict(roster_data, individual)
-    guild_zetas = get_guild_zetas(guild_url)
+        guild_dict = create_guild_dict(roster_data, individual)
+        global_dict.update(guild_dict)
+        guild_zetas = get_guild_zetas(guild_url)
+        global_zetas.update(guild_zetas)
 
     readiness = {}
     for phase, teams in HSTR_TEAMS.items():
@@ -267,7 +272,7 @@ def analyze_guild_hstr_readiness(url):
             total = 95
         readiness[phase] = {'remaining': total, 'teams': []}
         phase_ready = False
-        for player_name, player_roster in guild_dict.items():
+        for player_name, player_roster in global_dict.items():
             if phase_ready:
                 break
             teams_left = True
@@ -276,7 +281,7 @@ def analyze_guild_hstr_readiness(url):
                 for team in teams:
                     power = 0
                     IDS = []
-                    player_zetas = guild_zetas.get(player_name)
+                    player_zetas = global_zetas.get(player_name)
                     team_zetas = team.get('ZETAS')
 
                     if team_zetas:
@@ -313,7 +318,7 @@ def analyze_guild_hstr_readiness(url):
                         {'player_name': player_name, 'team_name': winner['name'], 'goal': winner['goal'],
                          'eligibility': winner['eligibility']})
                     for id in winner['IDS']:
-                        del guild_dict[player_name][id]
+                        del global_dict[player_name][id]
                     if readiness[phase]['remaining'] <= 0:
                         readiness[phase]['remaining'] = 0
                         phase_ready = True
@@ -330,7 +335,7 @@ def analyze_guild_hstr_readiness(url):
 
     leftover_gp = 0
     nb_toons = 0
-    for player_name, toons in guild_dict.items():
+    for player_name, toons in global_dict.items():
         for toon_name, toon_data in toons.items():
             if toon_data['power'] > 10000:
                 leftover_gp += toon_data['power']

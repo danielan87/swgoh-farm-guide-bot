@@ -75,7 +75,7 @@ async def h(ctx):
     embed.add_field(name="?h", value="List all available commands.", inline=False)
     embed.add_field(name="?sithraid",
                     value="Analyze Heroic Sith Raid Readiness for a guild "
-                          "(usage: ?sithraid <swgoh.gg url of the guild/player>) optional: "
+                          "(usage: `?sithraid <list of <swgoh.gg url of the guild/player>>)` optional: "
                           "Add \"details\" at the end to get assignments.",
                     inline=False)
     embed.add_field(name="?sithraidteams",
@@ -103,7 +103,7 @@ async def h(ctx):
                     value="Contact JubeiNabeshin#8860",
                     inline=False)
     embed.add_field(name="About DSR:",
-                    value="DeathStarRow is an alliance of 4 guilds, from 100m to 150m GP. 2 guilds have HSTR on farm!",
+                    value="DeathStarRow is an alliance of 4 guilds, from 100m to 160m GP. 2 guilds have HSTR on farm!",
                     inline=False)
     embed.add_field(name="SWA:",
                     value="https://swgoh.gg/g/646/deathstarrow-swa/",
@@ -422,10 +422,12 @@ async def analyze_roster(ctx, url):
 
 
 @client.command(pass_context=True)
-async def sithraid(ctx, url, details=None):
-    log("{} asked for ?sithraid {} {}".format(str(ctx.message.author), url, details if details else ''))
-    details = True if details == 'details' else False
-    messages, breakdown = hstr_readiness.analyze_guild_hstr_readiness(url)
+async def sithraid(ctx, *params):
+    details = True if params[-1] == 'details' else False
+    log("{} asked for ?sithraid {} {}".format(str(ctx.message.author), params, details))
+    urls = params[:-1] if details else params
+    url = urls[0]
+    messages, breakdown = hstr_readiness.analyze_guild_hstr_readiness(urls)
     if not messages:
         await client.say("invalid url")
         return
