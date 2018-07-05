@@ -16,6 +16,8 @@ from data import TOON_DATA
 import redis
 from settings import REDIS_CONN_INFO, GUILD_ID
 from get_platoons_json import *
+from pytz import timezone
+tz = timezone('EST')
 
 r = redis.StrictRedis(host=REDIS_CONN_INFO.get('host'), port=REDIS_CONN_INFO.get('port'), db=REDIS_CONN_INFO.get('db'))
 
@@ -474,8 +476,8 @@ def add_rotation(channel_id, players):
     with open(r'rotations/{}'.format(channel_id), 'w') as outfile:
         json.dump(rot, outfile)
 
-    example = '{:%m/%d/%y}: '.format(datetime.datetime.today())
-    tomorrow = '{:%m/%d/%y}: '.format(datetime.datetime.today() + datetime.timedelta(days=1))
+    example = '{:%m/%d/%y}: '.format(datetime.datetime.now(tz))
+    tomorrow = '{:%m/%d/%y}: '.format(datetime.datetime.now(tz) + datetime.timedelta(days=1))
     i = 1
     j = 1
     for key in sorted(rot.keys()):
@@ -507,7 +509,7 @@ def del_rotation(channel_id):
 
 
 def get_rotation(channel_id):
-    today = datetime.datetime.today().strftime('%m/%d/%y')
+    today = datetime.datetime.now(tz).strftime('%m/%d/%y')
     try:
         with open(r'rotations/{}'.format(channel_id)) as f:
             rot = json.load(f)
@@ -524,7 +526,7 @@ def get_rotation(channel_id):
 
 
 def rotate(channel_id):
-    today = datetime.datetime.today().strftime('%m/%d/%y')
+    today = datetime.datetime.now(tz).strftime('%m/%d/%y')
     with open(r'rotations/{}'.format(channel_id)) as f:
         rot = json.load(f)
     i = 1

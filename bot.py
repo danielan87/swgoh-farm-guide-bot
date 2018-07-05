@@ -11,6 +11,8 @@ import datetime
 from settings import BOT_TOKEN
 import matplotlib
 import math
+from pytz import timezone
+tz = timezone('EST')
 
 matplotlib.rc('axes.formatter', useoffset=False)
 matplotlib.use('Agg')
@@ -64,7 +66,7 @@ async def h(ctx):
     print("{} asked for the command list!".format(str(ctx.message.author)))
     log("{} asked for h".format(str(ctx.message.author)))
     embed = discord.Embed(title="List of Commands", colour=discord.Colour(0x000000),
-                          timestamp=datetime.datetime.now())
+                          timestamp=datetime.datetime.now(tz))
 
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
     embed.set_footer(
@@ -161,7 +163,7 @@ async def whohas(ctx):
                 return
             icon = r.get('icon')
             embed = discord.Embed(colour=discord.Colour(0x000000),
-                                  timestamp=datetime.datetime.now(),
+                                  timestamp=datetime.datetime.now(tz),
                                   description="List of players ordered by GP")
 
             if not icon:
@@ -348,7 +350,7 @@ async def guildgp(ctx):
             await client.delete_message(message)
     os.remove(filename)
     embed = discord.Embed(title="Bespin's Galactic Power Evolution", colour=discord.Colour(0x000000),
-                          timestamp=datetime.datetime.now())
+                          timestamp=datetime.datetime.now(tz))
 
     embed.set_image(url=url)
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
@@ -379,7 +381,7 @@ async def farmneeds(ctx):
     for t in ships:
         ship_res += "{}: {}\n".format(t['name'], t['need'])
     embed = discord.Embed(title="JnJ's Farm Needs", colour=discord.Colour(0x000000),
-                          timestamp=datetime.datetime.now())
+                          timestamp=datetime.datetime.now(tz))
 
     embed.set_thumbnail(url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
     embed.set_footer(text="DSR Bot",
@@ -400,7 +402,7 @@ async def analyze_roster(ctx, url):
     for team_name, values in response.items():
         embed = discord.Embed(title="{} Readiness for HSTR".format(team_name), colour=discord.Colour(0x000000),
                               url=url,
-                              timestamp=datetime.datetime.now())
+                              timestamp=datetime.datetime.now(tz))
         embed.set_thumbnail(url="https:{}".format(values['icon']))
         embed.set_author(name="DeathStarRow Bot",
                          icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
@@ -434,7 +436,7 @@ async def sithraid(ctx, *params):
 
     embed = discord.Embed(title="HSTR Readiness", colour=discord.Colour(0x000000),
                           url=url,
-                          timestamp=datetime.datetime.now())
+                          timestamp=datetime.datetime.now(tz))
     embed.set_author(name="DeathStarRow Bot",
                      icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
     embed.set_footer(text="DeathStarRow",
@@ -449,7 +451,7 @@ async def sithraid(ctx, *params):
             if len(teams) < MAX_HSTR_TEAMS_PER_EMBED:
                 embed = discord.Embed(title="HSTR {} Assignments".format(phase), colour=discord.Colour(0x000000),
                                       url=url,
-                                      timestamp=datetime.datetime.now())
+                                      timestamp=datetime.datetime.now(tz))
                 embed.set_author(name="DeathStarRow Bot",
                                  icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
                 embed.set_footer(text="DeathStarRow",
@@ -465,7 +467,7 @@ async def sithraid(ctx, *params):
                 for i in range(1, nb + 1):
                     embed = discord.Embed(title="HSTR {} Assignments ({}/{})".format(phase, i, nb), colour=discord.Colour(0x000000),
                                           url=url,
-                                          timestamp=datetime.datetime.now())
+                                          timestamp=datetime.datetime.now(tz))
                     embed.set_author(name="DeathStarRow Bot",
                                      icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
                     embed.set_footer(text="DeathStarRow",
@@ -492,7 +494,7 @@ async def sithraidteams(ctx):
     for phase, teams in messages.items():
         if len(teams) < MAX_HSTR_TEAMS_PER_EMBED:
             embed = discord.Embed(title="HSTR Teams for {}".format(phase), colour=discord.Colour(0x000000),
-                                  timestamp=datetime.datetime.now())
+                                  timestamp=datetime.datetime.now(tz))
             embed.set_author(name="DeathStarRow Bot",
                              icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
             embed.set_footer(text="DeathStarRow",
@@ -505,7 +507,7 @@ async def sithraidteams(ctx):
             for i in range(1, nb + 1):
                 embed = discord.Embed(title="HSTR Teams for {} ({}/{})".format(phase, i, nb),
                                       colour=discord.Colour(0x000000),
-                                      timestamp=datetime.datetime.now())
+                                      timestamp=datetime.datetime.now(tz))
                 embed.set_author(name="DeathStarRow Bot",
                                  icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
                 embed.set_footer(text="DeathStarRow",

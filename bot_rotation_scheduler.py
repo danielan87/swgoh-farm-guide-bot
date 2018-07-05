@@ -7,6 +7,8 @@ from settings import BOT_TOKEN
 import datetime
 client = discord.Client()
 import os
+from pytz import timezone
+tz = timezone('EST')
 
 INTERVAL = '* * * * *'
 channel_list_file = r'rotations/master_channel_list.txt'
@@ -21,7 +23,7 @@ async def speak(interval):
             with open(channel_list_file) as f:
                 content = f.readlines()
             content = [x.strip().split(';') for x in content if x.strip()]
-            today = datetime.datetime.today()
+            today = datetime.datetime.now(tz)
             today_str = today.strftime('%m/%d/%y')
             hour = today.strftime('%H%M')
             to_rotate = [c[0].strip() for c in content if c[1] == hour]
