@@ -12,6 +12,7 @@ from settings import BOT_TOKEN
 import matplotlib
 import math
 from pytz import timezone
+
 tz = timezone('EST')
 
 matplotlib.rc('axes.formatter', useoffset=False)
@@ -73,15 +74,18 @@ async def h(ctx):
         text="DSR Bot",
         icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
 
-    embed.add_field(name="?ping", value="Check if the bot is running.", inline=False)
-    embed.add_field(name="?h", value="List all available commands.", inline=False)
+    embed.add_field(name="ATTENTION",
+                    value="Some of those commands are deprecated and will no longer be maintained. Check `,h` for the updated versions.",
+                    inline=False)
+    embed.add_field(name="?ping", value="**Deprecated** Check if the bot is running.", inline=False)
+    embed.add_field(name="?h", value="List all available **old** commands.", inline=False)
     embed.add_field(name="?sithraid",
-                    value="Analyze Heroic Sith Raid Readiness for a guild "
+                    value="**Deprecated** Analyze Heroic Sith Raid Readiness for a guild "
                           "(usage: `?sithraid <list of <swgoh.gg url of the guild/player>>)` optional: "
                           "Add \"details\" at the end to get assignments.",
                     inline=False)
     embed.add_field(name="?sithraidteams",
-                    value="Teams used to analyze your roster for the raid.",
+                    value="**Deprecated** Teams used to analyze your roster for the raid.",
                     inline=False)
     embed.add_field(name="?add_rotation",
                     value="Bind a rotation to a channel. Usage: `?add_rotation player1 player2 player3 ...`. "
@@ -119,7 +123,7 @@ async def h(ctx):
     embed.add_field(name="SOK:",
                     value="https://swgoh.gg/g/27003/deathstarrow-sok/",
                     inline=False)
-    embed.add_field(name="Recruitment server:",
+    embed.add_field(name="To be considered for one of our guilds:",
                     value="https://discord.gg/AhMvsJT",
                     inline=False)
     embed.add_field(name="To invite the bot in your own server:",
@@ -465,14 +469,17 @@ async def sithraid(ctx, *params):
             else:
                 nb = math.ceil(len(teams) / MAX_HSTR_TEAMS_PER_EMBED)
                 for i in range(1, nb + 1):
-                    embed = discord.Embed(title="HSTR {} Assignments ({}/{})".format(phase, i, nb), colour=discord.Colour(0x000000),
+                    embed = discord.Embed(title="HSTR {} Assignments ({}/{})".format(phase, i, nb),
+                                          colour=discord.Colour(0x000000),
                                           url=url,
                                           timestamp=datetime.datetime.now(tz))
                     embed.set_author(name="DeathStarRow Bot",
                                      icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
                     embed.set_footer(text="DeathStarRow",
                                      icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
-                    for team_name, v in list(teams.items())[(i - 1) * MAX_HSTR_TEAMS_PER_EMBED:i * MAX_HSTR_TEAMS_PER_EMBED if i * MAX_HSTR_TEAMS_PER_EMBED < len(teams) else len(teams)]:
+                    for team_name, v in list(teams.items())[(
+                                                                    i - 1) * MAX_HSTR_TEAMS_PER_EMBED:i * MAX_HSTR_TEAMS_PER_EMBED if i * MAX_HSTR_TEAMS_PER_EMBED < len(
+                            teams) else len(teams)]:
                         embed.add_field(
                             name="{} - {} (Goal: {}%) - eligibility: {}".format(team_name, v['comp'], v['goal'],
                                                                                 v['eligibility']),
@@ -512,7 +519,9 @@ async def sithraidteams(ctx):
                                  icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
                 embed.set_footer(text="DeathStarRow",
                                  icon_url="https://cdn.discordapp.com/attachments/415589715639795722/417845131656560640/DSR.png")
-                for name, msg in list(teams.items())[(i - 1) * MAX_HSTR_TEAMS_PER_EMBED:i * MAX_HSTR_TEAMS_PER_EMBED if i * MAX_HSTR_TEAMS_PER_EMBED < len(teams) else len(teams)]:
+                for name, msg in list(teams.items())[(
+                                                             i - 1) * MAX_HSTR_TEAMS_PER_EMBED:i * MAX_HSTR_TEAMS_PER_EMBED if i * MAX_HSTR_TEAMS_PER_EMBED < len(
+                        teams) else len(teams)]:
                     embed.add_field(name=name, value=msg, inline=False)
                 await client.send_message(ctx.message.author, embed=embed)
     await client.say("Teams sent via DM!")
