@@ -77,16 +77,7 @@ async def h(ctx):
     embed.add_field(name="ATTENTION",
                     value="Some of those commands are deprecated and will no longer be maintained. Check `,h` for the updated versions.",
                     inline=False)
-    embed.add_field(name="?ping", value="**Deprecated** Check if the bot is running.", inline=False)
     embed.add_field(name="?h", value="List all available **old** commands.", inline=False)
-    embed.add_field(name="?sithraid",
-                    value="**Deprecated** Analyze Heroic Sith Raid Readiness for a guild "
-                          "(usage: `?sithraid <list of <swgoh.gg url of the guild/player>>)` optional: "
-                          "Add \"details\" at the end to get assignments.",
-                    inline=False)
-    embed.add_field(name="?sithraidteams",
-                    value="**Deprecated** Teams used to analyze your roster for the raid.",
-                    inline=False)
     embed.add_field(name="?add_rotation",
                     value="Bind a rotation to a channel. Usage: `?add_rotation player1 player2 player3 ...`. "
                           "New rotation will be sent everyday at 12:30am EST. Possible to add a second rotation "
@@ -105,31 +96,6 @@ async def h(ctx):
                     value="Change the rotation time. example: `?set_rotation_time 1959` will give the rotation "
                           "everyday at 19:59 EST.",
                     inline=False)
-    embed.add_field(name="For more help or suggestions:",
-                    value="Contact JubeiNabeshin#8860",
-                    inline=False)
-    embed.add_field(name="About DSR:",
-                    value="DeathStarRow is an alliance of 4 guilds, from 100m to 160m GP. 2 guilds have HSTR on farm!",
-                    inline=False)
-    embed.add_field(name="SWA:",
-                    value="https://swgoh.gg/g/646/deathstarrow-swa/",
-                    inline=False)
-    embed.add_field(name="J&J:",
-                    value="https://swgoh.gg/g/861/deathstarrow-jj/",
-                    inline=False)
-    embed.add_field(name="O.D.B.:",
-                    value="https://swgoh.gg/g/10294/deathstarrow-odb/",
-                    inline=False)
-    embed.add_field(name="SOK:",
-                    value="https://swgoh.gg/g/27003/deathstarrow-sok/",
-                    inline=False)
-    embed.add_field(name="To be considered for one of our guilds:",
-                    value="https://discord.gg/AhMvsJT",
-                    inline=False)
-    embed.add_field(name="To invite the bot in your own server:",
-                    value="https://discordapp.com/oauth2/authorize?client_id=436693905736466432&permissions=0&scope=bot",
-                    inline=False)
-
     await client.say(embed=embed)
 
 
